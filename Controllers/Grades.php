@@ -3,24 +3,28 @@
 namespace Makkari\Controllers;
 
 use Makkari\Controllers\Controller;
-use Makkari\Models\User;
+use Makkari\Models\Schoolyear;
+use Makkari\Models\Semester;
 
-class App extends Controller
+class Grades extends Controller
 {
     public static function index()
     {
-        self::checkAuth();
-        if (self::get()) {
-            $view = new View(PAGES_PATH . "/home");
-            $data = array(
-                "userdata" => self::usersData($_SESSION['user_id'])
-            );
-            $view->render("dashboard", $data);
-        }
-    }
-    public static function create()
-    {
         // Your code here
+    }
+    public static function create($id)
+    {
+        self::checkAuth();
+        self::csrfToken();
+        if (self::get()) {
+            $view = new View(PAGES_PATH . "/std");
+            $data = array(
+                "id" => $id,
+                "semesters" => Semester::getAll(),
+                "schoolyear" => Schoolyear::getAll()
+            );
+            $view->render("addGrade", $data);
+        }
     }
     public static function edit()
     {

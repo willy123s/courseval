@@ -6,19 +6,23 @@ use Makkari\Config\Redirect;
 use Makkari\Config\Validations;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Department;
+use Makkari\Models\User;
 
 class Departments extends Controller
 {
     public static function index()
     {
+        self::checkAuth();
         $view = new View(PAGES_PATH . "/departments");
         $data = array(
             "departments" => Department::getAll(),
+            "userdata" => self::usersData($_SESSION['user_id'])
         );
         $view->render("departmentsview", $data);
     }
     public static function create()
     {
+        self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/departments");
@@ -27,6 +31,7 @@ class Departments extends Controller
     }
     public static function edit($id)
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/departments");
             $data = array(
@@ -37,6 +42,7 @@ class Departments extends Controller
     }
     public static function save()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => NULL,
@@ -67,6 +73,7 @@ class Departments extends Controller
 
     public static function update()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => self::clean($_POST['id']),
@@ -99,6 +106,7 @@ class Departments extends Controller
 
     public static function confirm($id)
     {
+        self::checkAuth();
         if (self::get()) {
             self::csrfToken();
             $department = Department::getById($id);
@@ -112,6 +120,7 @@ class Departments extends Controller
     }
     public static function delete()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $id = self::clean($_POST['id']);
             $department = Department::getById($id);

@@ -79,7 +79,7 @@ class Curriculumdetail extends Model
     }
     public function getSem()
     {
-        $sem = Semester::getById($this->subId);
+        $sem = Semester::getById($this->semId);
         return $sem;
     }
 

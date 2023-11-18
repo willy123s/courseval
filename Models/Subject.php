@@ -62,7 +62,7 @@ class Subject extends Model
     {
         $m = Model::getInstance();
         $list = [];
-        $r = $m->executeQuery('SELECT * FROM subjects WHERE (subjectCode like :key or description like :key) and id not in (SELECT subId from curriculumdetails WHERE currId=:currId)', array(":currId" => $currId, ":key" => "%" . $key . "%"));
+        $r = $m->executeQuery('SELECT * FROM subjects WHERE (subjectCode like :key or description like :key) and id not in (SELECT subId from curriculumdetails WHERE currId=:currId);', array(":currId" => $currId, ":key" => "%" . $key . "%"));
         if ($r) {
             $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($r as $v) {

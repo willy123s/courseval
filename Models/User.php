@@ -4,29 +4,29 @@ namespace Makkari\Models;
 
 use Makkari\Models\Model;
 
-class Student extends Model
+class User extends Model
 {
     protected $id;
-    protected $studNo;
+    protected $empno;
     protected $fname;
     protected $lname;
     protected $mname;
     protected $email;
-    protected $courseId;
-    protected $currId;
     protected $password;
+    protected $courseId;
+    protected $userType;
 
-    public function __construct($id, $studNo, $fname, $lname, $mname, $email, $courseId, $currId, $password)
+    public function __construct($id, $empno, $fname, $lname, $mname, $email, $password, $courseId, $userType)
     {
         $this->id = $id;
-        $this->studNo = $studNo;
+        $this->empno = $empno;
         $this->fname = $fname;
         $this->lname = $lname;
         $this->mname = $mname;
         $this->email = $email;
-        $this->courseId = $courseId;
-        $this->currId = $currId;
         $this->password = $password;
+        $this->courseId = $courseId;
+        $this->userType = $userType;
     }
 
     public function getId()
@@ -34,9 +34,9 @@ class Student extends Model
         return $this->id;
     }
 
-    public function getStudNo()
+    public function getEmpno()
     {
-        return $this->studNo;
+        return $this->empno;
     }
 
     public function getFname()
@@ -59,19 +59,19 @@ class Student extends Model
         return $this->email;
     }
 
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
     public function getCourseId()
     {
         return $this->courseId;
     }
 
-    public function getCurrId()
+    public function getUserType()
     {
-        return $this->currId;
-    }
-
-    public function getPassword()
-    {
-        return $this->password;
+        return $this->userType;
     }
 
     public function setId($value)
@@ -79,9 +79,9 @@ class Student extends Model
         $this->id = $value;
     }
 
-    public function setStudNo($value)
+    public function setEmpno($value)
     {
-        $this->studNo = $value;
+        $this->empno = $value;
     }
 
     public function setFname($value)
@@ -104,59 +104,50 @@ class Student extends Model
         $this->email = $value;
     }
 
-    public function setCourseId($value)
-    {
-        $this->courseId = $value;
-    }
-
-    public function setCurrId($value)
-    {
-        $this->currId = $value;
-    }
-
     public function setPassword($value)
     {
         $this->password = $value;
     }
 
-    public function getFullName()
+    public function setCourseId($value)
+    {
+        $this->courseId = $value;
+    }
+
+    public function setUserType($value)
+    {
+        $this->userType = $value;
+    }
+    public function getFullname()
     {
         return $this->lname . ", " . $this->fname . " " . ucfirst($this->mname[0]);
     }
-
     public function getCourse()
     {
         return Cours::getById($this->courseId);
     }
-
-    public function getCurriculum()
-    {
-        return Curriculum::getById($this->currId);
-    }
-
     public static function getAll()
     {
-
         $m = Model::getInstance();
         $list = [];
-        $r = $m->all('students');
+        $r = $m->all('users');
         if ($r) {
             foreach ($r as $v) {
-                $data = new Student(...$v);
+                $data = new User(...$v);
                 $list[] = $data;
             }
         }
         return $list;
     }
 
-    public static function getByStudNo($value)
+    public static function getByEmpNo($value)
     {
         $m = Model::getInstance();
         $data = NULL;
-        $r = $m->getOne('students', 'studNo', $value);
+        $r = $m->getOne('users', 'empno', $value);
         if ($r) {
 
-            $data = new Student(...$r);
+            $data = new User(...$r);
         }
         return $data;
     }
@@ -164,10 +155,10 @@ class Student extends Model
     {
         $m = Model::getInstance();
         $data = NULL;
-        $r = $m->getOne('students', 'id', $value);
+        $r = $m->getOne('users', 'id', $value);
         if ($r) {
 
-            $data = new Student(...$r);
+            $data = new User(...$r);
         }
         return $data;
     }
@@ -176,13 +167,13 @@ class Student extends Model
     {
         $m = Model::getInstance();
         if ($this->id) {
-            $query = 'UPDATE students SET studNo=:studNo,fname=:fname,lname=:lname,mname=:mname,email=:email,courseId=:courseId,currId=:currId,password=:password WHERE id=:id';
-            $params = array(':id' => $this->id, ':studNo' => $this->studNo, ':fname' => $this->fname, ':lname' => $this->lname, ':mname' => $this->mname, ':email' => $this->email, ':courseId' => $this->courseId, ':currId' => $this->currId, ':password' => $this->password);
+            $query = 'UPDATE users SET empno=:empno,fname=:fname,lname=:lname,mname=:mname,email=:email,password=:password,courseId=:courseId,userType=:userType WHERE id=:id';
+            $params = array(':id' => $this->id, ':empno' => $this->empno, ':fname' => $this->fname, ':lname' => $this->lname, ':mname' => $this->mname, ':email' => $this->email, ':password' => $this->password, ':courseId' => $this->courseId, ':userType' => $this->userType);
             $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         } else {
-            $query = 'INSERT INTO students VALUES (:id,:studNo,:fname,:lname,:mname,:email,:courseId,:currId,:password)';
-            $params = array(':id' => $this->id, ':studNo' => $this->studNo, ':fname' => $this->fname, ':lname' => $this->lname, ':mname' => $this->mname, ':email' => $this->email, ':courseId' => $this->courseId, ':currId' => $this->currId, ':password' => $this->password);
+            $query = 'INSERT INTO users VALUES (:id,:empno,:fname,:lname,:mname,:email,:password,:courseId,:userType)';
+            $params = array(':id' => $this->id, ':empno' => $this->empno, ':fname' => $this->fname, ':lname' => $this->lname, ':mname' => $this->mname, ':email' => $this->email, ':password' => $this->password, ':courseId' => $this->courseId, ':userType' => $this->userType);
             $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         }
@@ -192,7 +183,7 @@ class Student extends Model
     {
         $m = Model::getInstance();
         if ($this->id) {
-            $stmt = $m->delete('students', $this->id);
+            $stmt = $m->delete('users', $this->id);
             return $stmt->stmt->rowCount();
         }
     }

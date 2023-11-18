@@ -3,19 +3,24 @@
 namespace Makkari\Controllers;
 
 use Makkari\Controllers\Controller;
-use Makkari\Models\User;
 
-class App extends Controller
+class Login extends Controller
 {
     public static function index()
     {
-        self::checkAuth();
+        self::isLogedIn("/");
+        self::csrfToken();
         if (self::get()) {
-            $view = new View(PAGES_PATH . "/home");
-            $data = array(
-                "userdata" => self::usersData($_SESSION['user_id'])
-            );
-            $view->render("dashboard", $data);
+            $view = new View(PAGES_PATH . "/login");
+            $view->render("login");
+        }
+    }
+    public static function admin()
+    {
+        self::isLogedIn("/");
+        if (self::get()) {
+            $view = new View(PAGES_PATH . "/login");
+            $view->render("adminlogin");
         }
     }
     public static function create()

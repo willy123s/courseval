@@ -8,22 +8,26 @@ use Makkari\Controllers\Controller;
 use Makkari\Models\Cours;
 use Makkari\Models\Curriculum;
 use Makkari\Models\Student;
+use Makkari\Models\User;
 
 class Students extends Controller
 {
     public static function index()
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/students");
             $students = Student::getAll();
             $data = array(
-                "students" => $students
+                "students" => $students,
+                "userdata" => self::usersData($_SESSION['user_id'])
             );
             $view->render("/studentsview", $data);
         }
     }
     public static function create()
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/students");
             $data = array(
@@ -35,6 +39,7 @@ class Students extends Controller
     }
     public static function edit($id)
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/students");
             $data = array(
@@ -47,7 +52,10 @@ class Students extends Controller
     }
     public static function save()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
+            // $password = self::generatePassword(6);
+            $password = "psu12345";
             $data = array(
                 "id" => NULL,
                 "studNo" => $_POST['stnumber'],
@@ -57,6 +65,7 @@ class Students extends Controller
                 "email" => $_POST['email'],
                 "courseId" => $_POST['course'],
                 "currId" => $_POST['curr'],
+                "password" => password_hash($password, PASSWORD_BCRYPT),
             );
 
             $ruleset = array(
@@ -74,7 +83,7 @@ class Students extends Controller
             if (empty($validate->errors)) {
                 $student = new Student(...$data);
                 if ($student->save()) {
-                    self::createNotif("New student added.", 1);
+                    self::createNotif("New student added. {$password}", 1);
                 } else {
                     self::createNotif("Something went wrong. Please try again", 1);
                 }
@@ -86,6 +95,7 @@ class Students extends Controller
     }
     public static function update()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => $_POST['id'],
@@ -132,6 +142,7 @@ class Students extends Controller
     }
     public static function confirm($id)
     {
+        self::checkAuth();
         if (self::get()) {
             $students = Student::getById($id);
             $view = new View(PAGES_PATH . "/confirm");
@@ -144,6 +155,7 @@ class Students extends Controller
     }
     public static function delete()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $student = Student::getById($_POST['id']);
             if ($student->remove()) {

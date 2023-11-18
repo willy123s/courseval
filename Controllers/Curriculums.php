@@ -11,23 +11,26 @@ use Makkari\Models\Curriculumdetail;
 use Makkari\Models\Schoolyear;
 use Makkari\Models\Semester;
 use Makkari\Models\Subject;
+use Makkari\Models\User;
 use Makkari\Models\Yearlevel;
 
 class Curriculums extends Controller
 {
     public static function index()
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/curriculums");
             $data = array(
                 "curriculums" => Curriculum::getAll(),
-
+                "userdata" => self::usersData($_SESSION['user_id'])
             );
             $view->render("curriculumview", $data);
         }
     }
     public static function create()
     {
+        self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/curriculums");
@@ -40,6 +43,7 @@ class Curriculums extends Controller
     }
     public static function edit($id)
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/curriculums");
             $curr = Curriculum::getById($id);
@@ -55,6 +59,7 @@ class Curriculums extends Controller
     }
     public static function save()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => NULL,
@@ -91,6 +96,7 @@ class Curriculums extends Controller
 
     public static function details($id)
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/curriculums");
             $subjects = [];
@@ -114,6 +120,7 @@ class Curriculums extends Controller
     }
     public static function update()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => self::clean($_POST['id']),
@@ -150,6 +157,7 @@ class Curriculums extends Controller
 
     public static function confirm($id)
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/confirm");
             $data = array(
@@ -161,6 +169,7 @@ class Curriculums extends Controller
     }
     public static function remove()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $curr = Curriculum::getById($_POST['id']);
 
@@ -175,6 +184,7 @@ class Curriculums extends Controller
 
     public static function addsubject($curr, $yrlvl)
     {
+        self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/curriculums");
@@ -189,6 +199,7 @@ class Curriculums extends Controller
     }
     public static function savesubject()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             foreach ($_POST['subject'] as $sub) {
                 $data = array(
@@ -207,6 +218,6 @@ class Curriculums extends Controller
                 }
             }
         }
-        Redirect::to("/curriculums/details/{$_POST['yrlvl']}");
+        Redirect::to("/curriculums/details/{$_POST['currId']}");
     }
 }

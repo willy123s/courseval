@@ -6,22 +6,26 @@ use Makkari\Config\Redirect;
 use Makkari\Config\Validations;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Cours;
+use Makkari\Models\User;
 use PDO;
 
 class Courses extends Controller
 {
     public static function index()
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/courses");
             $data = array(
                 "courses" => Cours::getAll(),
+                "userdata" => self::usersData($_SESSION['user_id'])
             );
             $view->render("coursesview", $data);
         }
     }
     public static function create()
     {
+        self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/courses");
@@ -30,6 +34,7 @@ class Courses extends Controller
     }
     public static function edit($id)
     {
+        self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/courses");
@@ -41,6 +46,7 @@ class Courses extends Controller
     }
     public static function save()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => NULL,
@@ -69,6 +75,7 @@ class Courses extends Controller
     }
     public static function update()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => self::clean($_POST['id']),
@@ -99,6 +106,7 @@ class Courses extends Controller
     }
     public static function confirm($id)
     {
+        self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/confirm");
@@ -111,6 +119,7 @@ class Courses extends Controller
     }
     public static function remove()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $course = Cours::getById($_POST['id']);
             if ($course->remove()) {

@@ -32,7 +32,7 @@
                     <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                 </svg>
             </div>
-            <input type="text" id="filterSubject" data-target="subjects" data-curr="" placeholder="Search" class="font-sans block text-sm w-full pl-10 py-2 px-3 ring-1 ring-brand/10 focus:outline-brand text-slate-500 rounded-lg dark:bg-slate-800 dark:ring-0 dark:highlight-white/5 dark:text-slate-400">
+            <input type="text" id="filterSubject" data-target="subjects" data-curr="<?= $curr ?>" placeholder="Search" class="font-sans block text-sm w-full pl-10 py-2 px-3 ring-1 ring-brand/10 focus:outline-brand text-slate-500 rounded-lg dark:bg-slate-800 dark:ring-0 dark:highlight-white/5 dark:text-slate-400">
         </div>
 
         <div id="resultContainer" class="min-h-[350px] max-h-[80%]">

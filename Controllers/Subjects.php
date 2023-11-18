@@ -7,21 +7,25 @@ use Makkari\Config\Validations;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Cours;
 use Makkari\Models\Subject;
+use Makkari\Models\User;
 
 class Subjects extends Controller
 {
     public static function index()
     {
+        self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/subjects");
             $data = array(
-                "subjects" => Subject::getAll()
+                "subjects" => Subject::getAll(),
+                "userdata" => self::usersData($_SESSION['user_id'])
             );
             $view->render("subjectsview", $data);
         }
     }
     public static function create()
     {
+        self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/subjects");
@@ -30,13 +34,13 @@ class Subjects extends Controller
     }
     public static function edit($id)
     {
-
+        self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $subject = Subject::getById($id);
             if ($subject != NULL) {
                 $data = array(
-                    "subject" => $subject
+                    "subject" => $subject,
                 );
                 $view = new View(PAGES_PATH . "/subjects");
                 $view->render("editSubject", $data);
@@ -45,6 +49,7 @@ class Subjects extends Controller
     }
     public static function save()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => NULL,
@@ -74,6 +79,7 @@ class Subjects extends Controller
     }
     public static function update()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => self::clean($_POST['id']),
@@ -107,6 +113,7 @@ class Subjects extends Controller
     }
     public static function confirm($id)
     {
+        self::checkAuth();
         if (self::get()) {
             $subject = Subject::getById($id);
             $data = array(
@@ -119,6 +126,7 @@ class Subjects extends Controller
     }
     public static function remove()
     {
+        self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $subject = Subject::getById($_POST['id']);
             if ($subject->remove()) {

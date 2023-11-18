@@ -13,6 +13,6 @@ class Out extends Controller
     {
         // Record Logs
         session_destroy();
-        header("Location: /clogin");
+        header("Location: /");
     }
 }

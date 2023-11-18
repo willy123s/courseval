@@ -2,6 +2,9 @@
 
 namespace Makkari\Controllers;
 
+use Makkari\Models\Student;
+use Makkari\Models\User;
+
 require_once("./Config/DbConfig.php");
 class Controller
 {
@@ -13,6 +16,25 @@ class Controller
         return $str;
     }
 
+    public static function usersData($id)
+    {
+        if ($_SESSION['user_type'] != "Student") {
+            return User::getById($id);
+        } else {
+            return Student::getById($id);
+        }
+    }
+    public static function generatePassword($length = 10)
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_';
+        $charactersLength = strlen($characters);
+        $documentCode = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $documentCode .= $characters[random_int(0, $charactersLength - 1)];
+        }
+        return $documentCode;
+    }
     public static function generateDocumentCode($length = 10)
     {
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -99,7 +121,7 @@ class Controller
         if (!isset($_SESSION['usersession'])) {
 
             if ($target == NULL) {
-                header("Location: /");
+                header("Location: /login");
             } else {
                 header("Location: /{$target}");
             }
