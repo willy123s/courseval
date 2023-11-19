@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2023 at 08:28 AM
+-- Generation Time: Nov 19, 2023 at 11:24 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -164,6 +164,50 @@ INSERT INTO `departments` (`id`, `department`, `description`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `enrollmentdetails`
+--
+
+CREATE TABLE `enrollmentdetails` (
+  `id` int(11) NOT NULL,
+  `enrollmentId` int(11) NOT NULL,
+  `currDetId` int(11) NOT NULL,
+  `addedBy` int(11) NOT NULL,
+  `addedAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `enrollmentdetails`
+--
+
+INSERT INTO `enrollmentdetails` (`id`, `enrollmentId`, `currDetId`, `addedBy`, `addedAt`) VALUES
+(1, 1, 3, 2, '2023-11-20 00:00:00'),
+(2, 1, 3, 2, '2023-11-20 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `enrollments`
+--
+
+CREATE TABLE `enrollments` (
+  `id` int(11) NOT NULL,
+  `studId` int(11) NOT NULL,
+  `syId` int(11) NOT NULL,
+  `semId` int(11) NOT NULL,
+  `createdBy` int(11) NOT NULL,
+  `createdAt` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `enrollments`
+--
+
+INSERT INTO `enrollments` (`id`, `studId`, `syId`, `semId`, `createdBy`, `createdAt`) VALUES
+(1, 3, 0, 0, 2, '2023-11-20 00:00:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `grades`
 --
 
@@ -173,21 +217,22 @@ CREATE TABLE `grades` (
   `currDetailsId` int(11) NOT NULL,
   `grade` varchar(15) NOT NULL,
   `semester` int(11) NOT NULL,
-  `schoolyear` int(11) NOT NULL
+  `schoolyear` int(11) NOT NULL,
+  `isConfirmed` int(11) NOT NULL COMMENT '0 not confirmed, 1 Confirmed'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `grades`
 --
 
-INSERT INTO `grades` (`id`, `studId`, `currDetailsId`, `grade`, `semester`, `schoolyear`) VALUES
-(1, 3, 1, 'INC', 1, 3),
-(4, 3, 3, '2.0', 1, 3),
-(5, 3, 4, '3.0', 1, 3),
-(6, 3, 5, '1.75', 1, 3),
-(7, 3, 6, '1.25', 1, 3),
-(8, 3, 7, '1.5', 1, 2),
-(9, 3, 2, '5.0', 1, 3);
+INSERT INTO `grades` (`id`, `studId`, `currDetailsId`, `grade`, `semester`, `schoolyear`, `isConfirmed`) VALUES
+(1, 3, 1, 'INC', 1, 3, 1),
+(4, 3, 3, '2.0', 1, 3, 1),
+(5, 3, 4, '3.0', 1, 3, 0),
+(6, 3, 5, '1.75', 1, 3, 0),
+(7, 3, 6, '1.25', 1, 3, 0),
+(8, 3, 7, '1.5', 1, 2, 0),
+(9, 3, 2, '5.0', 1, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -442,6 +487,18 @@ ALTER TABLE `departments`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `enrollmentdetails`
+--
+ALTER TABLE `enrollmentdetails`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `enrollments`
+--
+ALTER TABLE `enrollments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `grades`
 --
 ALTER TABLE `grades`
@@ -518,6 +575,18 @@ ALTER TABLE `curriculums`
 --
 ALTER TABLE `departments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `enrollmentdetails`
+--
+ALTER TABLE `enrollmentdetails`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `enrollments`
+--
+ALTER TABLE `enrollments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `grades`
