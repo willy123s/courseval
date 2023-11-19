@@ -71,7 +71,11 @@ class Curriculumdetail extends Model
     {
         $this->semId = $value;
     }
-
+    public function getGradesByStudent($studid)
+    {
+        $grades = Grade::getGradeByStudentAndSubject($studid, $this->id);
+        return $grades;
+    }
     public function getSubject()
     {
         $subject = Subject::getById($this->subId);
@@ -83,11 +87,60 @@ class Curriculumdetail extends Model
         return $sem;
     }
 
+    public function getPreReqs()
+    {
+        $prereq = Prerequisite::getAllByPrereq($this->id);
+        return $prereq;
+    }
+
+    public static function getAllInCurr($id, $subCode)
+    {
+        $m = Model::getInstance();
+        $list = [];
+        $r = $m->executeQuery('SELECT * FROM curriculumdetails WHERE currId=:id and subId = (SELECT id FROM subjects WHERE subjectCode = :subCode)', array(":id" => $id, ":subCode" => $subCode));
+        if ($r->stmt->rowCount() > 0) {
+            $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($r as $v) {
+                $data = new Curriculumdetail(...$v);
+                $list[] = $data;
+            }
+        }
+        return $list;
+    }
     public static function getByCurrIdLevel($id, $lvl)
     {
         $m = Model::getInstance();
         $list = [];
         $r = $m->executeQuery('SELECT * FROM curriculumdetails WHERE currId=:id and yearId=:lvl', array(":id" => $id, ":lvl" => $lvl));
+        if ($r) {
+            $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($r as $v) {
+                $data = new Curriculumdetail(...$v);
+                $list[] = $data;
+            }
+        }
+        return $list;
+    }
+
+    public static function getCourseCheck($year, $sem, $currid)
+    {
+        $m = Model::getInstance();
+        $list = [];
+        $params = array(
+            ":year" => $year,
+            ":sem" => $sem,
+            ":currid" => $currid,
+            ":inc" => "INC",
+        );
+        $r = $m->executeQuery('SELECT * FROM curriculumdetails 
+                              WHERE ((yearId=:year and semId=:sem) and 
+                              (currId=:currid and id not in 
+                                    (SELECT currDetailsId FROM prerequisites WHERE prereq not in
+                                        (SELECT currDetailsId FROM grades WHERE grade <=3 and grade != :inc )
+                                    )
+                              )) and id not in (SELECT currDetailsId FROM grades WHERE grade <=3 and grade != :inc)
+                              ', $params);
+
         if ($r) {
             $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($r as $v) {

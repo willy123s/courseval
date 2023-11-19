@@ -13,14 +13,14 @@ class Grade extends Model
     protected $semester;
     protected $schoolyear;
 
-    public function __construct($id,$studId,$currDetailsId,$grade,$semester,$schoolyear)
+    public function __construct($id, $studId, $currDetailsId, $grade, $semester, $schoolyear)
     {
-           $this->id=$id;
-    $this->studId=$studId;
-    $this->currDetailsId=$currDetailsId;
-    $this->grade=$grade;
-    $this->semester=$semester;
-    $this->schoolyear=$schoolyear;
+        $this->id = $id;
+        $this->studId = $studId;
+        $this->currDetailsId = $currDetailsId;
+        $this->grade = $grade;
+        $this->semester = $semester;
+        $this->schoolyear = $schoolyear;
     }
 
     public function getId()
@@ -83,13 +83,31 @@ class Grade extends Model
         $this->schoolyear = $value;
     }
 
-    public static function getAll(){
-       
+    public static function getGradeByStudentAndSubject($studid, $currid)
+    {
+        $m = Model::getInstance();
+        $list = [];
+        $r = $m->executeQuery('SELECT * FROM grades WHERE studId =:studId and currDetailsId=:currDetId', array(":studId" => $studid, ":currDetId" => $currid));
+        if ($r) {
+            if ($r->stmt->rowCount() > 0) {
+                $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
+                foreach ($r as $v) {
+                    $data = new Grade(...$v);
+                    $list[] = $data;
+                }
+            }
+        }
+        return $list;
+    }
+
+    public static function getAll()
+    {
+
         $m = Model::getInstance();
         $list = [];
         $r = $m->all('grades');
-        if($r){
-            foreach($r as $v){
+        if ($r) {
+            foreach ($r as $v) {
                 $data = new Grade(...$v);
                 $list[] = $data;
             }
@@ -97,29 +115,30 @@ class Grade extends Model
         return $list;
     }
 
-    public static function getById($value){
+    public static function getById($value)
+    {
         $m = Model::getInstance();
         $data = NULL;
-        $r = $m->getOne('grades','id', $value);
-        if($r){
-            
+        $r = $m->getOne('grades', 'id', $value);
+        if ($r) {
+
             $data = new Grade(...$r);
-            
         }
         return $data;
     }
 
-    public function save(){
+    public function save()
+    {
         $m = Model::getInstance();
-        if($this->id){
+        if ($this->id) {
             $query = 'UPDATE grades SET studId=:studId,currDetailsId=:currDetailsId,grade=:grade,semester=:semester,schoolyear=:schoolyear WHERE id=:id';
-            $params = array(':id'=>$this->id,':studId'=>$this->studId,':currDetailsId'=>$this->currDetailsId,':grade'=>$this->grade,':semester'=>$this->semester,':schoolyear'=>$this->schoolyear);
-            $result = $m->executeQuery($query,$params);
+            $params = array(':id' => $this->id, ':studId' => $this->studId, ':currDetailsId' => $this->currDetailsId, ':grade' => $this->grade, ':semester' => $this->semester, ':schoolyear' => $this->schoolyear);
+            $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
-        }else{
+        } else {
             $query = 'INSERT INTO grades VALUES (:id,:studId,:currDetailsId,:grade,:semester,:schoolyear)';
-            $params = array(':id'=>$this->id,':studId'=>$this->studId,':currDetailsId'=>$this->currDetailsId,':grade'=>$this->grade,':semester'=>$this->semester,':schoolyear'=>$this->schoolyear);
-            $result = $m->executeQuery($query,$params);
+            $params = array(':id' => $this->id, ':studId' => $this->studId, ':currDetailsId' => $this->currDetailsId, ':grade' => $this->grade, ':semester' => $this->semester, ':schoolyear' => $this->schoolyear);
+            $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         }
     }
@@ -127,10 +146,9 @@ class Grade extends Model
     public function remove()
     {
         $m = Model::getInstance();
-        if($this->id){
-            $stmt=$m->delete('grades',$this->id);
+        if ($this->id) {
+            $stmt = $m->delete('grades', $this->id);
             return $stmt->stmt->rowCount();
         }
     }
 }
-

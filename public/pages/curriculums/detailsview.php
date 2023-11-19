@@ -26,6 +26,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
                         <th class="px-2 py-3">Description</th>
                         <th class="px-2 py-3">Units</th>
                         <th class="px-2 py-3">Semester</th>
+                        <th class="px-2 py-3">Co/Pre requisite</th>
                         <th class="px-2 py-3">Action</th>
                     </tr>
                 </thead>
@@ -34,19 +35,31 @@ require_once(TEMPLATE_PATH . "/nav.php");
 
                     if (sizeof($s) == 0) :
                         echo "<tr>";
-                        echo "<td colspan='4' class='px-2 py-3 text-red'>No Record(s) Found</td>";
+                        echo "<td colspan='6' class='px-2 py-3 text-red'>No Record(s) Found</td>";
                         echo "</tr>";
                     endif;
                     foreach ($s as $subject) :
+                        $prereq = $subject->getPreReqs();
+                        $prereqs = [];
+                        foreach ($prereq as $pp) {
+                            $prereqs[] = $pp->getCode();
+                        }
+
                     ?>
                         <tr class="transition-all">
                             <td class="px-2 py-3"><?= $subject->getSubject()->getSubjectCode() ?></td>
                             <td class="px-2 py-3"><?= $subject->getSubject()->getDescription() ?></td>
                             <td class="px-2 py-3"><?= $subject->getSubject()->getUnits() ?></td>
                             <td class="px-2 py-3"><?= $subject->getSem()->getSem() ?></td>
+                            <td class=" px-2 py-3 ">
+                                <div class="prereq focus:outline-brand/60 border border-slate-700/10" data-curr="<?= $curriculum->getId() ?>" data-id="<?= $subject->getId() ?>">&nbsp;
+                                    <?php
+                                    echo implode(", ", $prereqs);
+                                    ?>
+                                </div>
+                            </td>
                             <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                <a href="#" data-remote="/currdetails/edit/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 px-2 py-1 rounded-md">Edit</a>
-                                <a href="#" data-remote="/currdetails/confirm/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-danger-light hover:bg-danger transition-all text-slate-50 px-2 py-1 rounded-md">Delete</a>
+                                <a href="#" data-remote="/currdetails/confirm/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-danger-light hover:bg-danger transition-all text-slate-50 px-2 py-1 rounded-md text-sm">Delete</a>
                             </td>
                         </tr>
                     <?php

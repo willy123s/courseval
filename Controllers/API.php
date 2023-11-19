@@ -22,6 +22,7 @@ class API extends Controller
         // }
     }
 
+
     public static function fetch()
     {
         if ($_POST['target'] == "subjects") {

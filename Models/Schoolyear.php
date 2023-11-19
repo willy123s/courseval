@@ -52,8 +52,9 @@ class Schoolyear extends Model
 
         $m = Model::getInstance();
         $list = [];
-        $r = $m->all('schoolyears');
+        $r = $m->executeQuery('SELECT * FROM schoolyears ORDER BY schoolyear desc');
         if ($r) {
+            $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
             foreach ($r as $v) {
                 $data = new Schoolyear(...$v);
                 $list[] = $data;

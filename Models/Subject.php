@@ -58,6 +58,8 @@ class Subject extends Model
     {
         $this->units = $value;
     }
+
+
     public static function getByKeyButNotIn($currId, $key)
     {
         $m = Model::getInstance();

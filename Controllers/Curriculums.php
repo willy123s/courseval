@@ -8,6 +8,7 @@ use Makkari\Controllers\Controller;
 use Makkari\Models\Cours;
 use Makkari\Models\Curriculum;
 use Makkari\Models\Curriculumdetail;
+use Makkari\Models\Prerequisite;
 use Makkari\Models\Schoolyear;
 use Makkari\Models\Semester;
 use Makkari\Models\Subject;
@@ -112,6 +113,7 @@ class Curriculums extends Controller
             // echo json_encode($lvls);
 
             $data = array(
+                "userdata" => self::usersData($_SESSION['user_id']),
                 "curriculum" => Curriculum::getById($id),
                 "yearlevels" => $lvls
             );

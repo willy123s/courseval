@@ -1,4 +1,7 @@
 <?php
+
+use Makkari\Controllers\Grades;
+
 require_once(TEMPLATE_PATH . "/header.php");
 require_once(TEMPLATE_PATH . "/nav.php");
 ?>
@@ -12,6 +15,8 @@ require_once(TEMPLATE_PATH . "/nav.php");
     foreach ($yearlevels as $year) :
         $y = $year['yearlevels'];
         $s = $year['subjects'];
+
+
     ?>
         <div class="bg-white p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
             <h2 class="text-lg text-slate-700 mb-6"><?= $y->getYear() ?></h2>
@@ -38,16 +43,34 @@ require_once(TEMPLATE_PATH . "/nav.php");
                         echo "</tr>";
                     endif;
                     foreach ($s as $subject) :
+                        $grade = $subject->getGradesByStudent($_SESSION['user_id']);
+                        $grades = array();
+                        foreach ($grade as $g) {
+                            $grades[] = $g->getGrade();
+                        }
+
+                        $prereq = $subject->getPreReqs();
+                        $prereqs = [];
+                        foreach ($prereq as $pp) {
+                            $prereqs[] = $pp->getCode();
+                        }
+
                     ?>
                         <tr class="transition-all">
                             <td class="px-2 py-3"><?= $subject->getSubject()->getSubjectCode() ?></td>
                             <td class="px-2 py-3"><?= $subject->getSubject()->getDescription() ?></td>
                             <td class="px-2 py-3"><?= $subject->getSubject()->getUnits() ?></td>
                             <td class="px-2 py-3"><?= $subject->getSem()->getSem() ?></td>
-                            <td class="px-2 py-3"></td>
-                            <td class="px-2 py-3"></td>
+                            <td class="px-2 py-3">
+                                <?= implode(", ", $prereqs); ?>
+                            </td>
+                            <td class="px-2 py-3"><?= implode(" / ", $grades) ?></td>
                             <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                <a href="#" data-remote="/grades/create/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 px-2 py-1 rounded-md">Add Grade</a>
+                                <a href="#" title="Add Grade" data-remote="/grades/create/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-2 rounded-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                                    </svg>
+                                </a>
                             </td>
                         </tr>
                     <?php
