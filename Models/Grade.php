@@ -12,8 +12,9 @@ class Grade extends Model
     protected $grade;
     protected $semester;
     protected $schoolyear;
+    protected $isConfirmed;
 
-    public function __construct($id, $studId, $currDetailsId, $grade, $semester, $schoolyear)
+    public function __construct($id, $studId, $currDetailsId, $grade, $semester, $schoolyear, $isConfirmed)
     {
         $this->id = $id;
         $this->studId = $studId;
@@ -21,6 +22,7 @@ class Grade extends Model
         $this->grade = $grade;
         $this->semester = $semester;
         $this->schoolyear = $schoolyear;
+        $this->isConfirmed = $isConfirmed;
     }
 
     public function getId()
@@ -53,6 +55,11 @@ class Grade extends Model
         return $this->schoolyear;
     }
 
+    public function getIsConfirmed()
+    {
+        return $this->isConfirmed;
+    }
+
     public function setId($value)
     {
         $this->id = $value;
@@ -83,6 +90,10 @@ class Grade extends Model
         $this->schoolyear = $value;
     }
 
+    public function setIsConfirmed($value)
+    {
+        $this->isConfirmed = $value;
+    }
     public static function getGradeByStudentAndSubject($studid, $currid)
     {
         $m = Model::getInstance();
@@ -99,7 +110,6 @@ class Grade extends Model
         }
         return $list;
     }
-
     public static function getAll()
     {
 
@@ -131,13 +141,13 @@ class Grade extends Model
     {
         $m = Model::getInstance();
         if ($this->id) {
-            $query = 'UPDATE grades SET studId=:studId,currDetailsId=:currDetailsId,grade=:grade,semester=:semester,schoolyear=:schoolyear WHERE id=:id';
-            $params = array(':id' => $this->id, ':studId' => $this->studId, ':currDetailsId' => $this->currDetailsId, ':grade' => $this->grade, ':semester' => $this->semester, ':schoolyear' => $this->schoolyear);
+            $query = 'UPDATE grades SET studId=:studId,currDetailsId=:currDetailsId,grade=:grade,semester=:semester,schoolyear=:schoolyear,isConfirmed=:isConfirmed WHERE id=:id';
+            $params = array(':id' => $this->id, ':studId' => $this->studId, ':currDetailsId' => $this->currDetailsId, ':grade' => $this->grade, ':semester' => $this->semester, ':schoolyear' => $this->schoolyear, ':isConfirmed' => $this->isConfirmed);
             $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         } else {
-            $query = 'INSERT INTO grades VALUES (:id,:studId,:currDetailsId,:grade,:semester,:schoolyear)';
-            $params = array(':id' => $this->id, ':studId' => $this->studId, ':currDetailsId' => $this->currDetailsId, ':grade' => $this->grade, ':semester' => $this->semester, ':schoolyear' => $this->schoolyear);
+            $query = 'INSERT INTO grades VALUES (:id,:studId,:currDetailsId,:grade,:semester,:schoolyear,:isConfirmed)';
+            $params = array(':id' => $this->id, ':studId' => $this->studId, ':currDetailsId' => $this->currDetailsId, ':grade' => $this->grade, ':semester' => $this->semester, ':schoolyear' => $this->schoolyear, ':isConfirmed' => $this->isConfirmed);
             $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         }

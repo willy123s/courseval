@@ -10,8 +10,12 @@ if (isset($_SESSION['notif'])) {
 <script src="/public/js/filterSubject.js"></script>
 <script src="/public/js/notif.js"></script>
 <script src="/public/js/datatable.js"></script>
-<script src="/public/js/prereq.js"></script>
+
 <script src="/public/js/loadSubjects.js"></script>
+
+<script src="/public/js/prereq.js"></script>
+<script src="/public/js/enroll.js"></script>
+<script src="/public/js/loadGrades.js"></script>
 
 </body>
 

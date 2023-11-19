@@ -122,7 +122,7 @@ class Curriculumdetail extends Model
         return $list;
     }
 
-    public static function getCourseCheck($year, $sem, $currid)
+    public static function getCourseCheck($year, $sem, $currid, $studid)
     {
         $m = Model::getInstance();
         $list = [];
@@ -131,14 +131,15 @@ class Curriculumdetail extends Model
             ":sem" => $sem,
             ":currid" => $currid,
             ":inc" => "INC",
+            ":studid" => $studid,
         );
         $r = $m->executeQuery('SELECT * FROM curriculumdetails 
                               WHERE ((yearId=:year and semId=:sem) and 
                               (currId=:currid and id not in 
                                     (SELECT currDetailsId FROM prerequisites WHERE prereq not in
-                                        (SELECT currDetailsId FROM grades WHERE grade <=3 and grade != :inc )
+                                        (SELECT currDetailsId FROM grades WHERE (grade <=3 and grade != :inc) and (studId=:studid))
                                     )
-                              )) and id not in (SELECT currDetailsId FROM grades WHERE grade <=3 and grade != :inc)
+                              )) and id not in (SELECT currDetailsId FROM grades WHERE (grade <=3 and grade != :inc) and (studId=:studid))
                               ', $params);
 
         if ($r) {

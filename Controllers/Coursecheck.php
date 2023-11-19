@@ -5,6 +5,7 @@ namespace Makkari\Controllers;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Curriculumdetail;
 use Makkari\Models\Semester;
+use Makkari\Models\Student;
 use Makkari\Models\Yearlevel;
 
 class Coursecheck extends Controller
@@ -24,19 +25,30 @@ class Coursecheck extends Controller
     public static function load()
     {
         if (self::post()) {
-            $userdata = self::usersData($_SESSION['user_id']);
-            $data = array(
-                "year" => $_POST['year'],
-                "sem" => $_POST['sem'],
-                "currid" => $userdata->getCurrId()
-            );
+            if ($_SESSION['user_type'] != "Student") {
+                $userdata = Student::getByStudNo($_POST['studno']);
+                if ($userdata == NULL) {
+                    echo "no records found for <span class='text-danger font-semibold'>" . $_POST['studno'] . "</span>";
+                }
+            } else {
+                $userdata = self::usersData($_SESSION['user_id']);
+            }
+            if ($userdata != NULL) {
+                $data = array(
+                    "year" => $_POST['year'],
+                    "sem" => $_POST['sem'],
+                    "currid" => $userdata->getCurrId(),
+                    "studid" => $userdata->getId()
+                );
 
-            $curr = Curriculumdetail::getCourseCheck(...$data);
-            $view = new View(PAGES_PATH . "/std");
-            $load = array(
-                "loads" => $curr
-            );
-            $view->render("loadedsubjects", $load);
+                $curr = Curriculumdetail::getCourseCheck(...$data);
+
+                $view = new View(PAGES_PATH . "/std");
+                $load = array(
+                    "loads" => $curr
+                );
+                $view->render("loadedsubjects", $load);
+            }
         }
     }
     public static function create()

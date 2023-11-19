@@ -29,7 +29,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
                         <th class="px-2 py-3">Description</th>
                         <th class="px-2 py-3">Units</th>
                         <th class="px-2 py-3">Semester</th>
-                        <th class="px-2 py-3">Pre/Co requisite</th>
+                        <th class="px-2 py-3">Pre requisite</th>
                         <th class="px-2 py-3">Grade</th>
                         <th class="px-2 py-3">Action</th>
                     </tr>
@@ -45,8 +45,14 @@ require_once(TEMPLATE_PATH . "/nav.php");
                     foreach ($s as $subject) :
                         $grade = $subject->getGradesByStudent($_SESSION['user_id']);
                         $grades = array();
-                        foreach ($grade as $g) {
-                            $grades[] = $g->getGrade();
+                        $iscofirmed = 2;
+                        if (!empty($grade)) {
+                            foreach ($grade as $g) {
+                                $grades[] = $g->getGrade();
+                                $iscofirmed = $g->getIsConfirmed();
+                            }
+                        } else {
+                            $iscofirmed = 2;
                         }
 
                         $prereq = $subject->getPreReqs();
@@ -66,11 +72,15 @@ require_once(TEMPLATE_PATH . "/nav.php");
                             </td>
                             <td class="px-2 py-3"><?= implode(" / ", $grades) ?></td>
                             <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                <a href="#" title="Add Grade" data-remote="/grades/create/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-2 rounded-md">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                                    </svg>
-                                </a>
+                                <?php
+                                if ($iscofirmed != 1) {
+                                ?>
+                                    <a href="#" title="Add Grade" data-remote="/grades/create/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-2 rounded-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                                        </svg>
+                                    </a>
+                                <?php } ?>
                             </td>
                         </tr>
                     <?php

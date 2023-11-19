@@ -9,7 +9,7 @@
                 <th class="px-2 py-1 text-left">Pre-Req</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="checkboxList">
             <?php
             foreach ($loads as $load) {
                 $subject = $load->getSubject();
@@ -22,7 +22,7 @@
             ?>
                 <tr class="even:bg-slate-50">
                     <td class="px-2 py-1">
-                        <input type="checkbox" name="" id="">
+                        <input type="checkbox" name="" id="" value="<?= $load->getId() ?>">
                     </td>
                     <td class="px-2 py-1"><?= $subject->getSubjectCode() ?></td>
                     <td class="px-2 py-1"><?= $subject->getDescription() ?></td>
@@ -34,6 +34,9 @@
             ?>
         </tbody>
     </table>
+    <?php if ($_SESSION['user_type'] != "Student") : ?>
+        <button onclick="getCheckedCheckboxes()" class="px-3 py-2 text-sm bg-brand hover:bg-brand-dark text-white mt-6 rounded-lg">Add to Enrollment</button>
+    <?php endif; ?>
     <div>
 
     </div>

@@ -44,6 +44,7 @@ class Grades extends Controller
                 "grade" => $_POST['grade'],
                 "semester" => $_POST['semester'],
                 "schoolyear" => $_POST['sy'],
+                "isConfirmed" => 0,
             );
             $ruleset = array(
                 "studId" => ['required'],
@@ -68,7 +69,27 @@ class Grades extends Controller
         }
         Redirect::to("/myCurriculums");
     }
-
+    public static function accept($studid, $id)
+    {
+        self::csrfToken();
+        $msgbox = new Msgbox("Confirm Grade", "Are you sure you want to confirm this grade?", "grades/msgaccept/" . $studid, $id);
+        $msgbox->render();
+    }
+    public static function msgaccept($studid)
+    {
+        if (self::post() and self::verifyRequest()) {
+            $student = Student::getById($studid);
+            $data = array(
+                "id" => $_POST['id']
+            );
+            $grades = Grade::getGradeByStudentAndSubject($studid, $data['id']);
+            foreach ($grades as $grade) {
+                $grade->setIsConfirmed(1);
+                $grade->save();
+            }
+        }
+        Redirect::to("/studentgrades//{$student->getStudNo()}");
+    }
     public static function confirm()
     {
         // Your code goes here
