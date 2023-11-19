@@ -36,8 +36,8 @@ require_once(TEMPLATE_PATH . "/nav.php");
                             <td class="px-2 py-3"><?= $dept->getDepartment() ?></td>
                             <td class="px-2 py-3"><?= $dept->getDescription() ?></td>
                             <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                <a href="#" data-remote="/departments/edit/<?= $dept->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 px-2 py-1 rounded-md">Edit</a>
-                                <a href="#" data-remote="/departments/confirm/<?= $dept->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-danger-light hover:bg-danger transition-all text-slate-50 px-2 py-1 rounded-md">Delete</a>
+                                <a href="#" data-remote="/departments/edit/<?= $dept->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop text-sm bg-brand-dark hover:bg-brand-light transition-all text-slate-200 px-2 py-1 rounded-md">Edit</a>
+                                <a href="#" data-remote="/departments/confirm/<?= $dept->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop text-sm bg-danger-light hover:bg-danger transition-all text-slate-50 px-2 py-1 rounded-md">Delete</a>
                             </td>
                         </tr>
                     <?php

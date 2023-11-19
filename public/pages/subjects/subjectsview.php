@@ -38,8 +38,8 @@ require_once(TEMPLATE_PATH . "/nav.php");
                             <td class="px-2 py-3"><?= $subject->getDescription() ?></td>
                             <td class="px-2 py-3"><?= $subject->getUnits() ?></td>
                             <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                <a href="#" data-remote="/subjects/edit/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 px-2 py-1 rounded-md">Edit</a>
-                                <a href="#" data-remote="/subjects/confirm/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-danger-light hover:bg-danger transition-all text-slate-50 px-2 py-1 rounded-md">Delete</a>
+                                <a href="#" data-remote="/subjects/edit/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="text-sm pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 px-2 py-1 rounded-md">Edit</a>
+                                <a href="#" data-remote="/subjects/confirm/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="text-sm pop bg-danger-light hover:bg-danger transition-all text-slate-50 px-2 py-1 rounded-md">Delete</a>
                             </td>
                         </tr>
                     <?php
