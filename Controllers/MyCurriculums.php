@@ -23,6 +23,8 @@ class MyCurriculums extends Controller
                 array_push($lvls, array("yearlevels" => $level, "subjects" => $subs));
             }
             $data = array(
+                "pageTitle" => "My Curriculum / Grades",
+                "pageDesc" => "View curriculum and add grades",
                 "userdata" => $userdata,
                 "curriculum" => $curriculum,
                 "yearlevels" => $lvls,
@@ -30,6 +32,7 @@ class MyCurriculums extends Controller
             $view->render("checklists", $data);
         }
     }
+
     public static function create()
     {
         // Your code here

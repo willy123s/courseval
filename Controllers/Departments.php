@@ -15,6 +15,8 @@ class Departments extends Controller
         self::checkAuth();
         $view = new View(PAGES_PATH . "/departments");
         $data = array(
+            "pageTitle" => "Departments",
+            "pageDesc" => "Manage departments",
             "departments" => Department::getAll(),
             "userdata" => self::usersData($_SESSION['user_id'])
         );

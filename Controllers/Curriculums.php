@@ -23,6 +23,8 @@ class Curriculums extends Controller
         if (self::get()) {
             $view = new View(PAGES_PATH . "/curriculums");
             $data = array(
+                "pageTitle" => "Curriculum",
+                "pageDesc" => "Manage curriculum",
                 "curriculums" => Curriculum::getAll(),
                 "userdata" => self::usersData($_SESSION['user_id'])
             );
@@ -108,9 +110,6 @@ class Curriculums extends Controller
                 $subs = Curriculumdetail::getByCurrIdLevel($id, $level->getId());
                 array_push($lvls, array("yearlevels" => $level, "subjects" => $subs));
             }
-            // var_dump($lvls[0]['subjects']);
-            // header("Content-type: application/json");
-            // echo json_encode($lvls);
 
             $data = array(
                 "userdata" => self::usersData($_SESSION['user_id']),

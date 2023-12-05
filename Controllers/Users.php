@@ -15,6 +15,8 @@ class Users extends Controller
         if (self::get()) {
             $view = new View(PAGES_PATH . "/users");
             $data = array(
+                "pageTitle" => "Users",
+                "pageDesc" => "Manage users",
                 "users" => User::getAll(),
                 "userdata" => self::usersData($_SESSION['user_id'])
             );

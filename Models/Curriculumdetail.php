@@ -76,6 +76,12 @@ class Curriculumdetail extends Model
         $grades = Grade::getGradeByStudentAndSubject($studid, $this->id);
         return $grades;
     }
+    public function getByCurrDet()
+    {
+        $grades = Grade::getGradeByStudentAndSubject($_SESSION['user_id'], $this->id);
+        return $grades;
+    }
+
     public function getSubject()
     {
         $subject = Subject::getById($this->subId);
@@ -137,9 +143,9 @@ class Curriculumdetail extends Model
                               WHERE ((yearId=:year and semId=:sem) and 
                               (currId=:currid and id not in 
                                     (SELECT currDetailsId FROM prerequisites WHERE prereq not in
-                                        (SELECT currDetailsId FROM grades WHERE (grade <=3 and grade != :inc) and (studId=:studid))
+                                        (SELECT currDetailsId FROM grades WHERE (grade <=3 and grade = :inc) and (studId=:studid))
                                     )
-                              )) and id not in (SELECT currDetailsId FROM grades WHERE (grade <=3 and grade != :inc) and (studId=:studid))
+                              )) and id not in (SELECT currDetailsId FROM grades WHERE (grade <=3) and (studId=:studid))
                               ', $params);
 
         if ($r) {

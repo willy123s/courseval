@@ -19,6 +19,8 @@ class Students extends Controller
             $view = new View(PAGES_PATH . "/students");
             $students = Student::getAll();
             $data = array(
+                "pageTitle" => "Students",
+                "pageDesc" => "Manage students",
                 "students" => $students,
                 "userdata" => self::usersData($_SESSION['user_id'])
             );

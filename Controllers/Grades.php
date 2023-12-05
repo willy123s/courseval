@@ -5,17 +5,17 @@ namespace Makkari\Controllers;
 use Makkari\Config\Redirect;
 use Makkari\Config\Validations;
 use Makkari\Controllers\Controller;
+use Makkari\Models\Curriculum;
+use Makkari\Models\Curriculumdetail;
 use Makkari\Models\Grade;
 use Makkari\Models\Schoolyear;
 use Makkari\Models\Semester;
 use Makkari\Models\Student;
+use Makkari\Models\Yearlevel;
 
 class Grades extends Controller
 {
-    public static function index()
-    {
-        // Your code here
-    }
+
     public static function create($id)
     {
         self::checkAuth();
@@ -30,9 +30,88 @@ class Grades extends Controller
             $view->render("addGrade", $data);
         }
     }
-    public static function edit()
+    public static function viewGrades($curdetid)
     {
-        // Your edit code goes here
+        if (self::get()) {
+            $userdata = self::usersData($_SESSION['user_id']);
+            $curriculum = Curriculum::getById($userdata->getCurrId());
+            $levels = Yearlevel::getAll();
+            $lvls = [];
+            foreach ($levels as $level) {
+                $subs = Curriculumdetail::getByCurrIdLevel($userdata->getCurrId(), $level->getId());
+                array_push($lvls, array("yearlevels" => $level, "subjects" => $subs));
+            }
+            $currDetails = Curriculumdetail::getById($curdetid);
+            // $grades = Grade::getGradeByStudentAndSubject($userdata->getId(), $curdetid);
+
+            $view = new View(PAGES_PATH . "/grades");
+            $data = array(
+                "pageTitle" => "My Curriculum / Grades",
+                "pageDesc" => "View curriculum and add grades",
+                "userdata" => $userdata,
+                "semesters" => Semester::getAll(),
+                "schoolyear" => Schoolyear::getAll(),
+                "curriculum" => $curriculum,
+                "yearlevels" => $lvls,
+                "subject" => $currDetails
+            );
+            $view->render("viewgrades", $data);
+        }
+    }
+    public static function edit($id)
+    {
+        if (self::get()) {
+            self::csrfToken();
+
+            $grade = Grade::getById($id);
+            $view = new View(PAGES_PATH . "/grades");
+            $data = array(
+                "grade" => $grade,
+                "semesters" => Semester::getAll(),
+                "schoolyear" => Schoolyear::getAll()
+            );
+            $view->render("editGrade", $data);
+        }
+    }
+    public static function update()
+    {
+        $curdet = 0;
+        if (self::post() and self::verifyRequest()) {
+            $data = array(
+                "studId" => $_SESSION['user_id'],
+                "gradeid" => $_POST['id'],
+                "grade" => $_POST['grade'],
+                "semester" => $_POST['semester'],
+                "schoolyear" => $_POST['sy'],
+                "isConfirmed" => 0,
+            );
+            $ruleset = array(
+                "studId" => ['required'],
+                "grade" => ['required'],
+                "semester" => ['required'],
+                "schoolyear" => ['required'],
+            );
+            $validate = Validations::validateData($data, $ruleset);
+            if (empty($validate->errors)) {
+                $grade = Grade::getById($data['gradeid']);
+                $grade->setGrade($data['grade']);
+                $grade->setSemester($data['semester']);
+                $grade->setSchoolyear($data['schoolyear']);
+                $curdet = $grade->getCurrDetailsId();
+                if ($grade->save()) {
+                    self::createNotif("Your grade is updated", 1);
+                } else {
+                    self::createNotif("Something went wrong. Please try again", 0);
+                }
+            } else {
+                self::createNotif($validate->showErrors, 0);
+            }
+        }
+        if ($curdet != 0) {
+            Redirect::to("/grades/viewgrades/{$curdet}");
+        } else {
+            Redirect::to("/grades/mycurriculums");
+        }
     }
     public static function save()
     {
@@ -90,12 +169,40 @@ class Grades extends Controller
         }
         Redirect::to("/studentgrades//{$student->getStudNo()}");
     }
-    public static function confirm()
+    public static function confirm($gradeid)
     {
-        // Your code goes here
+        if (self::get()) {
+            self::csrfToken();
+            $view = new View(PAGES_PATH . "/confirm");
+            $data = array(
+                "target" => "grades",
+                "id" => $gradeid,
+            );
+            $view->render("confirm", $data);
+        }
     }
-    public static function delete()
+    public static function remove()
     {
-        //your delete code goes here
+        $curdet = 0;
+        if (self::post() and self::verifyRequest()) {
+            $grades = Grade::getById($_POST['id']);
+            $curdet = $grades->getCurrDetailsId();
+            if ($grades != NULL) {
+                if ($grades->remove()) {
+                    self::createNotif("Grade has been deleted", 1);
+                } else {
+                    self::createNotif("Something went wrong. Please try again", 0);
+                }
+            } else {
+                self::createNotif("Something went wrong. Please try again", 0);
+            }
+        } else {
+            self::createNotif("Something went wrong. Please try again", 0);
+        }
+        if ($curdet != 0) {
+            Redirect::to("/grades/viewgrades/{$curdet}");
+        } else {
+            Redirect::to("/grades/viewgrades/{$curdet}");
+        }
     }
 }

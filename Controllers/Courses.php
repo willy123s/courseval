@@ -17,6 +17,8 @@ class Courses extends Controller
         if (self::get()) {
             $view = new View(PAGES_PATH . "/courses");
             $data = array(
+                "pageTitle" => "Courses",
+                "pageDesc" => "Manage courses",
                 "courses" => Cours::getAll(),
                 "userdata" => self::usersData($_SESSION['user_id'])
             );

@@ -2,9 +2,12 @@
 
 namespace Makkari\Controllers;
 
+use Makkari\Config\Redirect;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Enrollment;
 use Makkari\Models\Enrollmentdetail;
+use Makkari\Models\Schoolyear;
+use Makkari\Models\Semester;
 use Makkari\Models\Student;
 
 class Enrollments extends Controller
@@ -13,35 +16,16 @@ class Enrollments extends Controller
     {
         // Your code here
     }
+
     public static function create()
     {
-        if (self::post()) {
-            $userdata = Student::getByStudNo($_POST['studno']);
-            $checkboxes = $_POST['checkedValues'];
-            $enData = array(
-                "id" => NULL,
-                "studId" => $userdata->getId(),
-                "syId" => "",
-                "semId" => "",
-                "createdBy" => $_SESSION['user_id'],
-                "createdAt" => date("Y-m-d, H:i:s"),
+        if (self::get()) {
+            $view = new View(PAGES_PATH . "/faculty");
+            $data = array(
+                "schoolyear" => Schoolyear::getAll(),
+                "semesters" => Semester::getAll()
             );
-
-            $enrollment = new Enrollment(...$enData);
-            $en = $enrollment->save();
-            if ($en) {
-                foreach ($checkboxes as $value) {
-                    $details = array(
-                        "id" => NULL,
-                        "enrollmentId" => $en,
-                        "currDetId" => $userdata->getId(),
-                        "addedBy" => $_SESSION['user_id'],
-                        "addedAt" => date("Y-m-d, H:i:s"),
-                    );
-                    $endetails = new Enrollmentdetail(...$details);
-                    $endetails->save();
-                }
-            }
+            $view->render("newcoursecheck", $data);
         }
     }
     public static function edit()
@@ -50,7 +34,54 @@ class Enrollments extends Controller
     }
     public static function save()
     {
-        // Your save code goes here
+        if (self::post()) {
+            $checkboxes =  $_POST['checkedValues'];
+            $userdata = Student::getByStudNo($_POST['studno']);
+            if ($userdata != NULL) {
+                $enData = array(
+                    "id" => NULL,
+                    "studId" => $userdata->getId(),
+                    "syId" => "",
+                    "semId" => "",
+                    "createdBy" => $_SESSION['user_id'],
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "status" => "Pending"
+                );
+                $enr = Enrollment::getPendingByStudent($enData['studId'], 'Pending');
+
+                if ($enr == NULL) {
+                    $enrollment = new Enrollment(...$enData);
+                    $enrollmentid = $enrollment->save();
+                } else {
+                    $enrollmentid = $enr->getId();
+                }
+                foreach ($checkboxes as $value) {
+                    $details = array(
+                        "id" => NULL,
+                        "enrollmentId" => $enrollmentid,
+                        "currDetId" => $value,
+                        "addedBy" => $_SESSION['user_id'],
+                        "addedAt" => date("Y-m-d H:i:s"),
+                    );
+                    $e = Enrollmentdetail::isExist($details['enrollmentId'], $details['currDetId']);
+                    if (!$e) {
+                        $endetails = new Enrollmentdetail(...$details);
+                        $endetails->save();
+                        echo "Subjects Added";
+                    } else {
+                        echo "Already Exists";
+                    }
+                }
+            } else {
+                echo "Student Did not exist";
+            }
+            echo $e;
+        }
+    }
+    public static function addSubjects()
+    {
+
+        $enrollmentid = $_POST['enrollmentid'];
     }
 
     public static function confirm()

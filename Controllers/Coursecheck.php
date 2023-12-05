@@ -4,6 +4,7 @@ namespace Makkari\Controllers;
 
 use Makkari\Controllers\Controller;
 use Makkari\Models\Curriculumdetail;
+use Makkari\Models\Schoolyear;
 use Makkari\Models\Semester;
 use Makkari\Models\Student;
 use Makkari\Models\Yearlevel;
@@ -12,9 +13,13 @@ class Coursecheck extends Controller
 {
     public static function index()
     {
+        self::checkAuth();
         if (self::get()) {
+
             $view = new View(PAGES_PATH . "/std");
             $data = array(
+                "pageTitle" => "Course Check",
+                "pageDesc" => "View available subjects",
                 "userdata" => self::usersData($_SESSION['user_id']),
                 "yearlevels" => Yearlevel::getAll(),
                 "semesters" => Semester::getAll()
@@ -24,6 +29,7 @@ class Coursecheck extends Controller
     }
     public static function load()
     {
+        self::checkAuth();
         if (self::post()) {
             if ($_SESSION['user_type'] != "Student") {
                 $userdata = Student::getByStudNo($_POST['studno']);

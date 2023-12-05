@@ -26,6 +26,8 @@ class Studentgrades extends Controller
             }
 
             $data = array(
+                "pageTitle" => "Student Grades",
+                "pageDesc" => "Confirm or Add Grades of Student",
                 "userdata" => self::usersData($_SESSION['user_id']),
                 "user" => $userdata,
                 "curriculum" => $curriculum,
@@ -33,6 +35,8 @@ class Studentgrades extends Controller
             );
         } else {
             $data = array(
+                "pageTitle" => "Student Grades",
+                "pageDesc" => "Confirm or Add Grades of Student",
                 "userdata" => self::usersData($_SESSION['user_id']),
             );
         }

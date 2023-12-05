@@ -12,8 +12,9 @@ class Enrollment extends Model
     protected $semId;
     protected $createdBy;
     protected $createdAt;
+    protected $status;
 
-    public function __construct($id, $studId, $syId, $semId, $createdBy, $createdAt)
+    public function __construct($id, $studId, $syId, $semId, $createdBy, $createdAt, $status)
     {
         $this->id = $id;
         $this->studId = $studId;
@@ -21,6 +22,7 @@ class Enrollment extends Model
         $this->semId = $semId;
         $this->createdBy = $createdBy;
         $this->createdAt = $createdAt;
+        $this->status = $status;
     }
 
     public function getId()
@@ -53,6 +55,11 @@ class Enrollment extends Model
         return $this->createdAt;
     }
 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
     public function setId($value)
     {
         $this->id = $value;
@@ -81,6 +88,45 @@ class Enrollment extends Model
     public function setCreatedAt($value)
     {
         $this->createdAt = $value;
+    }
+
+    public function setStatus($value)
+    {
+        $this->status = $value;
+    }
+    public function getSchoolYear()
+    {
+        $sy = Schoolyear::getById($this->syId);
+        return $sy;
+    }
+    public function getDetails()
+    {
+        $details = Enrollmentdetail::getByEnrollment($this->id);
+        return $details;
+    }
+    public function getSem()
+    {
+        $sem = Semester::getById($this->semId);
+        return $sem;
+    }
+
+    public static function getPendingByStudent($studId, $status)
+    {
+
+        $m = Model::getInstance();
+
+        $params = array(
+            ":studid" => $studId,
+            ":status" => $status,
+        );
+        $r = $m->executeQuery('SELECT * FROM enrollments WHERE studId=:studid and status=:status order by id desc limit 1', $params);
+        if ($r) {
+            if ($r->stmt->rowCount()) {
+                $v = $r->stmt->fetch(\PDO::FETCH_ASSOC);
+                $data = new Enrollment(...$v);
+            }
+        }
+        return $data;
     }
 
     public static function getAll()
@@ -114,13 +160,13 @@ class Enrollment extends Model
     {
         $m = Model::getInstance();
         if ($this->id) {
-            $query = 'UPDATE enrollments SET studId=:studId,syId=:syId,semId=:semId,createdBy=:createdBy,createdAt=:createdAt WHERE id=:id';
-            $params = array(':id' => $this->id, ':studId' => $this->studId, ':syId' => $this->syId, ':semId' => $this->semId, ':createdBy' => $this->createdBy, ':createdAt' => $this->createdAt);
+            $query = 'UPDATE enrollments SET studId=:studId,syId=:syId,semId=:semId,createdBy=:createdBy,createdAt=:createdAt,status=:status WHERE id=:id';
+            $params = array(':id' => $this->id, ':studId' => $this->studId, ':syId' => $this->syId, ':semId' => $this->semId, ':createdBy' => $this->createdBy, ':createdAt' => $this->createdAt, ':status' => $this->status);
             $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         } else {
-            $query = 'INSERT INTO enrollments VALUES (:id,:studId,:syId,:semId,:createdBy,:createdAt)';
-            $params = array(':id' => $this->id, ':studId' => $this->studId, ':syId' => $this->syId, ':semId' => $this->semId, ':createdBy' => $this->createdBy, ':createdAt' => $this->createdAt);
+            $query = 'INSERT INTO enrollments VALUES (:id,:studId,:syId,:semId,:createdBy,:createdAt,:status)';
+            $params = array(':id' => $this->id, ':studId' => $this->studId, ':syId' => $this->syId, ':semId' => $this->semId, ':createdBy' => $this->createdBy, ':createdAt' => $this->createdAt, ':status' => $this->status);
             $result = $m->executeQuery($query, $params);
             return $result->lastInsertId;
         }

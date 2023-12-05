@@ -127,7 +127,18 @@ use function Makkari\Helpers\Breadcrumb;
                     </div>
                 </a>
                 <p class="hidden lg:block text-sm my-2 text-slate-500 font-semibold px-2">Transaction</p>
-                <a href="/coursecheck" class="relative group flex flex-col lg:flex-row lg:items-center gap-1 px-3 py-2 hover:bg-brand/10 rounded-lg <?= $GLOBALS['currentpage'] == "coursecheck" ? "bg-brand/5" : "" ?>">
+                <a href="/coursecheck" class="hidden relative group  flex-col lg:flex-row lg:items-center gap-1 px-3 py-2 hover:bg-brand/10 rounded-lg <?= $GLOBALS['currentpage'] == "coursecheck" ? "bg-brand/5" : "" ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                        <path d="M3.196 12.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a2.25 2.25 0 01-2.276 0L3.196 12.87z" />
+                        <path d="M3.196 8.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a2.25 2.25 0 01-2.276 0L3.196 8.87z" />
+                        <path d="M10.38 1.103a.75.75 0 00-.76 0l-7.25 4.25a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.76 0l7.25-4.25a.75.75 0 000-1.294l-7.25-4.25z" />
+                    </svg>
+                    <span class="hidden lg:block">Course Check</span>
+                    <div class="tooltip text-sm whitespace-nowrap hidden z-10 group-hover:block lg:group-hover:hidden absolute left-full top-0  w-fit px-3 py-2 rounded-lg text-slate-50 bg-slate-700/80 backdrop-blur-md">
+                        <span class="">Course Check</span>
+                    </div>
+                </a>
+                <a href="/preenroll" class="relative group flex flex-col lg:flex-row lg:items-center gap-1 px-3 py-2 hover:bg-brand/10 rounded-lg <?= $GLOBALS['currentpage'] == "coursecheck" ? "bg-brand/5" : "" ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                         <path d="M3.196 12.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a2.25 2.25 0 01-2.276 0L3.196 12.87z" />
                         <path d="M3.196 8.87l-.825.483a.75.75 0 000 1.294l7.25 4.25a.75.75 0 00.758 0l7.25-4.25a.75.75 0 000-1.294l-.825-.484-5.666 3.322a2.25 2.25 0 01-2.276 0L3.196 8.87z" />
@@ -191,6 +202,6 @@ use function Makkari\Helpers\Breadcrumb;
     <!-- topbard -->
 
     <div class="px-8">
-        <h2 class="text-2xl font-semibold mb-1"><?= ucfirst($GLOBALS['currentpage']) ?></h2>
-        <div class="text-sm text-slate-500">Manage <?= $GLOBALS['currentpage'] ?></div>
+        <h2 class="text-2xl font-semibold mb-1"><?= ucfirst($pageTitle) ?></h2>
+        <div class="text-sm text-slate-500"><?= $pageDesc ?></div>
     </div>

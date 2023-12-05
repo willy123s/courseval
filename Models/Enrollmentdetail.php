@@ -12,13 +12,13 @@ class Enrollmentdetail extends Model
     protected $addedBy;
     protected $addedAt;
 
-    public function __construct($id,$enrollmentId,$currDetId,$addedBy,$addedAt)
+    public function __construct($id, $enrollmentId, $currDetId, $addedBy, $addedAt)
     {
-           $this->id=$id;
-    $this->enrollmentId=$enrollmentId;
-    $this->currDetId=$currDetId;
-    $this->addedBy=$addedBy;
-    $this->addedAt=$addedAt;
+        $this->id = $id;
+        $this->enrollmentId = $enrollmentId;
+        $this->currDetId = $currDetId;
+        $this->addedBy = $addedBy;
+        $this->addedAt = $addedAt;
     }
 
     public function getId()
@@ -71,13 +71,23 @@ class Enrollmentdetail extends Model
         $this->addedAt = $value;
     }
 
-    public static function getAll(){
-       
+    public function getCurr()
+    {
+        $curr = Curriculumdetail::getById($this->currDetId);
+        return $curr;
+    }
+    public function getUser()
+    {
+        $user = User::getById($this->addedBy);
+        return $user;
+    }
+    public static function getAll()
+    {
         $m = Model::getInstance();
         $list = [];
         $r = $m->all('enrollmentdetails');
-        if($r){
-            foreach($r as $v){
+        if ($r) {
+            foreach ($r as $v) {
                 $data = new Enrollmentdetail(...$v);
                 $list[] = $data;
             }
@@ -85,29 +95,60 @@ class Enrollmentdetail extends Model
         return $list;
     }
 
-    public static function getById($value){
+    public static function getByEnrollment($enrollmentId)
+    {
+        $m = Model::getInstance();
+        $list = [];
+        $param = array(
+            ":enrollmentid" => $enrollmentId
+        );
+        $r = $m->executeQuery('SELECT * FROM enrollmentdetails WHERE enrollmentId=:enrollmentid', $param);
+        if ($r) {
+            if ($r->stmt->rowCount() > 0) {
+                $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
+                foreach ($r as $v) {
+                    $data = new Enrollmentdetail(...$v);
+                    $list[] = $data;
+                }
+            }
+        }
+        return $list;
+    }
+
+    public static function isExist($en, $currdet)
+    {
+        $m = Model::getInstance();
+
+        $params = array(
+            ":enId" => $en,
+            ":currDetId" => $currdet,
+        );
+        $r = $m->executeQuery('SELECT * FROM enrollmentdetails WHERE enrollmentId = :enId and currDetId=:currDetId', $params);
+        return $r->stmt->rowCount();
+    }
+    public static function getById($value)
+    {
         $m = Model::getInstance();
         $data = NULL;
-        $r = $m->getOne('enrollmentdetails','id', $value);
-        if($r){
-            
+        $r = $m->getOne('enrollmentdetails', 'id', $value);
+        if ($r) {
             $data = new Enrollmentdetail(...$r);
-            
         }
         return $data;
     }
 
-    public function save(){
+    public function save()
+    {
         $m = Model::getInstance();
-        if($this->id){
+        if ($this->id) {
             $query = 'UPDATE enrollmentdetails SET enrollmentId=:enrollmentId,currDetId=:currDetId,addedBy=:addedBy,addedAt=:addedAt WHERE id=:id';
-            $params = array(':id'=>$this->id,':enrollmentId'=>$this->enrollmentId,':currDetId'=>$this->currDetId,':addedBy'=>$this->addedBy,':addedAt'=>$this->addedAt);
-            $result = $m->executeQuery($query,$params);
+            $params = array(':id' => $this->id, ':enrollmentId' => $this->enrollmentId, ':currDetId' => $this->currDetId, ':addedBy' => $this->addedBy, ':addedAt' => $this->addedAt);
+            $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
-        }else{
+        } else {
             $query = 'INSERT INTO enrollmentdetails VALUES (:id,:enrollmentId,:currDetId,:addedBy,:addedAt)';
-            $params = array(':id'=>$this->id,':enrollmentId'=>$this->enrollmentId,':currDetId'=>$this->currDetId,':addedBy'=>$this->addedBy,':addedAt'=>$this->addedAt);
-            $result = $m->executeQuery($query,$params);
+            $params = array(':id' => $this->id, ':enrollmentId' => $this->enrollmentId, ':currDetId' => $this->currDetId, ':addedBy' => $this->addedBy, ':addedAt' => $this->addedAt);
+            $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         }
     }
@@ -115,10 +156,9 @@ class Enrollmentdetail extends Model
     public function remove()
     {
         $m = Model::getInstance();
-        if($this->id){
-            $stmt=$m->delete('enrollmentdetails',$this->id);
+        if ($this->id) {
+            $stmt = $m->delete('enrollmentdetails', $this->id);
             return $stmt->stmt->rowCount();
         }
     }
 }
-

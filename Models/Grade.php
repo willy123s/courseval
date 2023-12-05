@@ -94,6 +94,17 @@ class Grade extends Model
     {
         $this->isConfirmed = $value;
     }
+
+    public function getSchoolyearInfo()
+    {
+        $sy = Schoolyear::getById($this->schoolyear);
+        return $sy;
+    }
+    public function getSemesterInfo()
+    {
+        $sem = Semester::getById($this->semester);
+        return $sem;
+    }
     public static function getGradeByStudentAndSubject($studid, $currid)
     {
         $m = Model::getInstance();
@@ -110,9 +121,9 @@ class Grade extends Model
         }
         return $list;
     }
+
     public static function getAll()
     {
-
         $m = Model::getInstance();
         $list = [];
         $r = $m->all('grades');

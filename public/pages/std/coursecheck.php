@@ -44,6 +44,8 @@ require_once(TEMPLATE_PATH . "/nav.php");
             </div>
 
         </div>
+
+
     </div>
     <div class="flex-auto">
         <div id="itemContainer" class="bg-white p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
@@ -52,8 +54,11 @@ require_once(TEMPLATE_PATH . "/nav.php");
         <?php
         if ($_SESSION['user_type'] != "Student") {
         ?>
-            <div class="bg-white p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
+            <div class="hidden bg-white p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
                 <h2 class="text-xl">To Enroll Subject(s)</h2>
+                <div id="enrolledSubjects">
+
+                </div>
             </div>
         <?php } ?>
     </div>

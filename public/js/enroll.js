@@ -23,14 +23,15 @@ function getCheckedCheckboxes() {
     formData.append("studno", studno.value);
   }
 
-  fetch("/enrollments/create", {
+  fetch("/enrollments/save", {
     method: "POST",
 
     body: formData,
   })
     .then((response) => response.text())
     .then((data) => {
-      console.log("Server response:", data);
+      const myToast = new Toast();
+      myToast.showToast(data);
     })
     .catch((error) => console.error("Error sending data to server:", error));
 }

@@ -17,6 +17,8 @@ class Subjects extends Controller
         if (self::get()) {
             $view = new View(PAGES_PATH . "/subjects");
             $data = array(
+                "pageTitle" => "Manage Subjects",
+                "pageDesc" => "Manage subjects",
                 "subjects" => Subject::getAll(),
                 "userdata" => self::usersData($_SESSION['user_id'])
             );
