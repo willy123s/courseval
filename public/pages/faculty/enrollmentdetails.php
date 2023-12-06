@@ -42,7 +42,9 @@ require_once(TEMPLATE_PATH . "/nav.php");
                     </select>
                     <label for="year" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Grade <span class="text-danger">*</span></label>
                 </div>
+
                 <button id="loadSubjects" class="w-full bg-brand hover:bg-brand-dark transition-all rounded-md px-3 py-2 text-sm text-stone-50">Load Subjects</button>
+
             </div>
             <div class="flex-auto" id="itemContainer">
 
@@ -86,9 +88,13 @@ require_once(TEMPLATE_PATH . "/nav.php");
                             <td class="px-2 py-1"><?= $subject->getUnits() ?></td>
                             <td class="px-2 py-1 text-sm">Added By: <?= $detail->getUser()->getFullName() ?></td>
                             <td class="px-2 py-1">
-                                <a href="#" data-remote="/preenroll/confirm/<?= $detail->getId() ?>" class="pop text-xs bg-danger text-white hover:bg-danger-dark px-2 py-1 rounded-md">
-                                    Remove
-                                </a>
+                                <?php
+                                if ($endetails->getStatus() == "Pending") :
+                                ?>
+                                    <a href="#" data-remote="/preenroll/confirm/<?= $detail->getId() ?>" class="pop text-xs bg-danger text-white hover:bg-danger-dark px-2 py-1 rounded-md">
+                                        Remove
+                                    </a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php } ?>

@@ -43,7 +43,9 @@
             </tbody>
         </table>
         <?php if ($_SESSION['user_type'] != "Student") : ?>
+
             <button class="px-3 py-2 text-sm bg-brand hover:bg-brand-dark text-white mt-6 rounded-lg">Add to Enrollment</button>
+
         <?php endif; ?>
 
     </form>
