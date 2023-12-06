@@ -112,6 +112,8 @@ class Curriculums extends Controller
             }
 
             $data = array(
+                "pageTitle" => "Curriculum",
+                "pageDesc" => "Manage curriculum",
                 "userdata" => self::usersData($_SESSION['user_id']),
                 "curriculum" => Curriculum::getById($id),
                 "yearlevels" => $lvls

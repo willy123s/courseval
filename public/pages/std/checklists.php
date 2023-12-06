@@ -72,7 +72,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
                             </td>
                             <td class="px-2 py-3"><?= implode(" / ", $grades) ?></td>
                             <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                <a href="/grades/viewgrades/<?= $subject->getId() ?>" title="View Grade(s)" class="bg-success hover:bg-success-dark transition-all text-slate-200 p-2 rounded-md">
+                                <a href="/grades/viewgrades/<?= $subject->getId() ?>" title="View Grade(s)" class="bg-success hover:bg-success-dark transition-all text-slate-200 p-1 rounded-md">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 3.75H6A2.25 2.25 0 003.75 6v1.5M16.5 3.75H18A2.25 2.25 0 0120.25 6v1.5m0 9V18A2.25 2.25 0 0118 20.25h-1.5m-9 0H6A2.25 2.25 0 013.75 18v-1.5M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
@@ -84,8 +84,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
                                 }
                                 if ($iscofirmed != 1 or $g) {
                                 ?>
-
-                                    <a href="#" title="Add Grade" data-remote="/grades/create/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-2 rounded-md">
+                                    <a href="#" title="Add Grade" data-remote="/grades/create/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-1 rounded-md">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
                                         </svg>
