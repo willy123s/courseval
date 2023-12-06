@@ -50,7 +50,14 @@ require_once(TEMPLATE_PATH . "/nav.php");
         </div>
 
         <div class="bg-white flex flex-col gap-4 p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
-            <h2 class="text-lg font-semibold">Subjects to enroll for</h2>
+            <div class="flex flex-row justify-between items-center">
+                <h2 class="text-lg font-semibold">Subjects to enroll for</h2>
+                <div class="flex flex-row gap-2 items-center">
+                    <p class="px-2 py-1 text-sm rounded-md bg-slate-100"><?= $endetails->getStatus() ?></p>
+                    <a href="#" data-remote="/preenroll/finalize/<?= $endetails->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand hover:bg-brand-dark transition-all rounded-md px-2 py-1 text-sm text-stone-50">Finalize</a>
+                </div>
+            </div>
+
             <div id="enrollid" data-value="<?= $endetails->getId() ?>">
                 <h2>School Year: <span class="font-semibold"> <?= $endetails->getSchoolYear()->getSchoolYear() ?></span></h2>
                 <p>Semester: <span class="font-semibold"><?= $endetails->getSem()->getSem() ?></span></p>
@@ -79,13 +86,19 @@ require_once(TEMPLATE_PATH . "/nav.php");
                             <td class="px-2 py-1"><?= $subject->getUnits() ?></td>
                             <td class="px-2 py-1 text-sm">Added By: <?= $detail->getUser()->getFullName() ?></td>
                             <td class="px-2 py-1">
-                                <a href="#" data-remote="/preenroll/confirm/<?= $detail->getId() ?>" class="pop text-sm bg-danger text-white hover:bg-danger-dark px-2 py-1 rounded-md">
-                                    Delete
+                                <a href="#" data-remote="/preenroll/confirm/<?= $detail->getId() ?>" class="pop text-xs bg-danger text-white hover:bg-danger-dark px-2 py-1 rounded-md">
+                                    Remove
                                 </a>
                             </td>
                         </tr>
                     <?php } ?>
                 </tbody>
+                <tfoot>
+                    <tr class="bg-accent/50">
+                        <td colspan="2" class="px-2 py-1 text-right font-semibold">Total Units</td>
+                        <td colspan="3" class="px-2 py-1 font-semibold"><?= $total ?></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
 

@@ -8,11 +8,13 @@ class Semester extends Model
 {
     protected $id;
     protected $sem;
+    protected $status;
 
-    public function __construct($id,$sem)
+    public function __construct($id, $sem, $status)
     {
-           $this->id=$id;
-    $this->sem=$sem;
+        $this->id = $id;
+        $this->sem = $sem;
+        $this->status = $status;
     }
 
     public function getId()
@@ -25,6 +27,11 @@ class Semester extends Model
         return $this->sem;
     }
 
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
     public function setId($value)
     {
         $this->id = $value;
@@ -35,43 +42,61 @@ class Semester extends Model
         $this->sem = $value;
     }
 
-    public static function getAll(){
-       
+    public function setStatus($value)
+    {
+        $this->status = $value;
+    }
+
+    public static function getAll()
+    {
+
         $m = Model::getInstance();
         $list = [];
         $r = $m->all('semesters');
-        if($r){
-            foreach($r as $v){
+        if ($r) {
+            foreach ($r as $v) {
                 $data = new Semester(...$v);
                 $list[] = $data;
             }
         }
         return $list;
     }
-
-    public static function getById($value){
+    public static function getActive()
+    {
         $m = Model::getInstance();
         $data = NULL;
-        $r = $m->getOne('semesters','id', $value);
-        if($r){
-            
+        $r = $m->getOne('semesters', 'status', 'Active');
+        if ($r) {
+
             $data = new Semester(...$r);
-            
         }
         return $data;
     }
 
-    public function save(){
+    public static function getById($value)
+    {
         $m = Model::getInstance();
-        if($this->id){
-            $query = 'UPDATE semesters SET sem=:sem WHERE id=:id';
-            $params = array(':id'=>$this->id,':sem'=>$this->sem);
-            $result = $m->executeQuery($query,$params);
+        $data = NULL;
+        $r = $m->getOne('semesters', 'id', $value);
+        if ($r) {
+
+            $data = new Semester(...$r);
+        }
+        return $data;
+    }
+
+    public function save()
+    {
+        $m = Model::getInstance();
+        if ($this->id) {
+            $query = 'UPDATE semesters SET sem=:sem,status=:status WHERE id=:id';
+            $params = array(':id' => $this->id, ':sem' => $this->sem, ':status' => $this->status);
+            $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
-        }else{
-            $query = 'INSERT INTO semesters VALUES (:id,:sem)';
-            $params = array(':id'=>$this->id,':sem'=>$this->sem);
-            $result = $m->executeQuery($query,$params);
+        } else {
+            $query = 'INSERT INTO semesters VALUES (:id,:sem,:status)';
+            $params = array(':id' => $this->id, ':sem' => $this->sem, ':status' => $this->status);
+            $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         }
     }
@@ -79,10 +104,9 @@ class Semester extends Model
     public function remove()
     {
         $m = Model::getInstance();
-        if($this->id){
-            $stmt=$m->delete('semesters',$this->id);
+        if ($this->id) {
+            $stmt = $m->delete('semesters', $this->id);
             return $stmt->stmt->rowCount();
         }
     }
 }
-

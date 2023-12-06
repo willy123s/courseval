@@ -109,12 +109,35 @@ class Enrollment extends Model
         $sem = Semester::getById($this->semId);
         return $sem;
     }
+    public function getStudent()
+    {
+        $stud = Student::getById($this->studId);
+        return $stud;
+    }
+    public static function getCourseCheked($syid, $semid, $createdby)
+    {
 
+        $m = Model::getInstance();
+        $params = array(
+            ":createdby" => $createdby,
+            ":syid" => $syid,
+            ":semid" => $semid,
+        );
+        $list = [];
+        $r = $m->executeQuery('SELECT * FROM enrollments WHERE (syId=:syid and semId=:semid) and createdBy=:createdby order by id desc limit 1', $params);
+        if ($r) {
+            if ($r->stmt->rowCount()) {
+                $v = $r->stmt->fetch(\PDO::FETCH_ASSOC);
+                $data = new Enrollment(...$v);
+                $list[] = $data;
+            }
+        }
+        return $list;
+    }
     public static function getPendingByStudent($studId, $status)
     {
 
         $m = Model::getInstance();
-
         $params = array(
             ":studid" => $studId,
             ":status" => $status,
@@ -131,7 +154,6 @@ class Enrollment extends Model
 
     public static function getAll()
     {
-
         $m = Model::getInstance();
         $list = [];
         $r = $m->all('enrollments');

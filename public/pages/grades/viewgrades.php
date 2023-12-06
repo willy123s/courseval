@@ -5,11 +5,12 @@ use Makkari\Controllers\Grades;
 require_once(TEMPLATE_PATH . "/header.php");
 require_once(TEMPLATE_PATH . "/nav.php");
 $sub = $subject->getSubject();
-$grades = $subject->getGradesByStudent($_SESSION['user_id']);
+$grades = $subject->getGradesByStudent($userdata->getId());
 ?>
 
 <div class="px-8">
     <div class="bg-white p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
+        <h2 class="font-bold text-3xl mb-2"><?= $userdata->getFullName(); ?></h2>
         <h2 class="text-xl font-bold"><?= $curriculum->getName() ?></h2>
         <p><?= $curriculum->getCourse()->getDescription() ?></p>
         <p><?= $curriculum->getSyDet()->getSchoolyear() ?></p>

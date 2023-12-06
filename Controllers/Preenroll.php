@@ -18,10 +18,14 @@ class Preenroll extends Controller
     {
         self::checkAuth();
         $view = new View(PAGES_PATH . "/faculty");
+        $sy = Schoolyear::getActive();
+        $sem = Semester::getActive();
+        $enrollment = Enrollment::getCourseCheked($sy->getId(), $sem->getId(), $_SESSION['user_id']);
         $data = array(
             "pageTitle" => "Course Check",
             "pageDesc" => "Manage Course Checking",
             "userdata" => self::usersData($_SESSION['user_id']),
+            "coursechecked" => $enrollment,
         );
         $view->render("preenroll", $data);
     }
@@ -166,6 +170,30 @@ class Preenroll extends Controller
             $view = new View(PAGES_PATH . "/confirm");
             $view->render("confirm", $data);
         }
+    }
+    public static function finalize($enid)
+    {
+        if (self::get()) {
+            $msgbox = new Msgbox("Finalize", "Are you sure you want to finalize this preenrollment?", "preenroll/msgfinalize/", $enid);
+            $msgbox->render();
+        }
+    }
+    public static function msgfinalize()
+    {
+        if (self::post()) {
+            $data = array(
+                "id" => $_POST['id']
+            );
+            $enroll = Enrollment::getById($data['id']);
+            $student = $enroll->getStudent();
+            $enroll->setStatus("Completed");
+            if ($enroll->save()) {
+                self::createNotif("Enrollment is now Finalized.", 1);
+            } else {
+                self::createNotif("Enrollment is now Finalized.", 0);
+            }
+        }
+        Redirect::to("/preenroll/transaction/{$student->getStudNo()}/{$enroll->getId()}");
     }
     public static function remove()
     {

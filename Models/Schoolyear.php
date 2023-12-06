@@ -62,7 +62,17 @@ class Schoolyear extends Model
         }
         return $list;
     }
+    public static function getActive()
+    {
+        $m = Model::getInstance();
+        $data = NULL;
+        $r = $m->getOne('schoolyears', 'status', 'Active');
+        if ($r) {
 
+            $data = new Schoolyear(...$r);
+        }
+        return $data;
+    }
     public static function getById($value)
     {
         $m = Model::getInstance();

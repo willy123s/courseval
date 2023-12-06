@@ -5,6 +5,8 @@ namespace Makkari\Controllers;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Curriculum;
 use Makkari\Models\Curriculumdetail;
+use Makkari\Models\Schoolyear;
+use Makkari\Models\Semester;
 use Makkari\Models\Student;
 use Makkari\Models\Yearlevel;
 
@@ -67,6 +69,36 @@ class Studentgrades extends Controller
             }
         }
     }
+
+    public static function viewGrades($student, $curdetid)
+    {
+        if (self::get()) {
+            $userdata = Student::getById($student);
+            $curriculum = Curriculum::getById($userdata->getCurrId());
+            $levels = Yearlevel::getAll();
+            $lvls = [];
+            foreach ($levels as $level) {
+                $subs = Curriculumdetail::getByCurrIdLevel($userdata->getCurrId(), $level->getId());
+                array_push($lvls, array("yearlevels" => $level, "subjects" => $subs));
+            }
+            $currDetails = Curriculumdetail::getById($curdetid);
+            // $grades = Grade::getGradeByStudentAndSubject($userdata->getId(), $curdetid);
+
+            $view = new View(PAGES_PATH . "/grades");
+            $data = array(
+                "pageTitle" => "My Curriculum / Grades",
+                "pageDesc" => "View curriculum and add grades",
+                "userdata" => $userdata,
+                "semesters" => Semester::getAll(),
+                "schoolyear" => Schoolyear::getAll(),
+                "curriculum" => $curriculum,
+                "yearlevels" => $lvls,
+                "subject" => $currDetails
+            );
+            $view->render("viewgrades", $data);
+        }
+    }
+
     public static function create()
     {
         // Your code here
