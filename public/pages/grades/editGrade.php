@@ -13,7 +13,16 @@
         <input type="hidden" name="id" id="id" value="<?= $grade->getId() ?>">
 
         <div class="relative mb-6">
-            <input type="text" name="grade" id="grade" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent" placeholder="grade" value="<?= $grade->getGrade() ?>" />
+            <select name="grade" id="grade" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent">
+                <?php
+                foreach ($graderange as $r) :
+                    $selected = $r->getGrade() == $grade->getGrade() ? "selected" : "";
+                ?>
+                    <option value="<?= $r->getGrade() ?>" <?= $selected ?>><?= $r->getDescription() ?></option>
+                <?php
+                endforeach;
+                ?>
+            </select>
             <label for="grade" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Grade <span class="text-danger">*</span></label>
         </div>
 

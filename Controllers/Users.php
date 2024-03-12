@@ -7,6 +7,7 @@ use Makkari\Config\Validations;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Cours;
 use Makkari\Models\User;
+use Makkari\Models\Usertype;
 
 class Users extends Controller
 {
@@ -29,21 +30,31 @@ class Users extends Controller
         if (self::get()) {
             $view = new View(PAGES_PATH . "/users");
             $data = array(
+                "types" => Usertype::getAll(),
                 "courses" => Cours::getAll()
             );
             $view->render("addUser", $data);
         }
     }
-    public static function edit()
+    public static function edit($userid)
     {
-        // Your edit code goes here
+        if (self::get() and is_numeric($userid)) {
+            $view = new View(PAGES_PATH . "/users");
+            $types = Usertype::getAll();
+            $data = array(
+                "user" => User::getById($userid),
+                "types" => $types,
+                "courses" => Cours::getAll()
+            );
+            $view->render("edituser", $data);
+        }
     }
     public static function save()
     {
         if (self::post() and self::verifyRequest()) {
             $password = self::generatePassword(6);
             $data = array(
-                "id" => NULL,
+                "id" => $_POST['id'] ?? NULL,
                 "empno" => $_POST['empno'],
                 "fname" => $_POST['fname'],
                 "lname" => $_POST['lname'],
@@ -66,11 +77,27 @@ class Users extends Controller
             $validate = Validations::validateData($data, $ruleset);
 
             if (empty($validate->errors)) {
-                $user = new User(...$data);
-                if ($user->save()) {
-                    self::createNotif("New user added.", 1);
+                if ($data['id']) {
+                    $user = User::getById($data['id']);
+                    $user->setEmpno($data['empno']);
+                    $user->setFname($data['fname']);
+                    $user->setLname($data['lname']);
+                    $user->setEmail($data['email']);
+                    $user->setCourseId($data['courseId']);
+                    $user->setUserType($data['userType']);
+
+                    if ($user->save()) {
+                        self::createNotif("User's data has been updated.", 1);
+                    } else {
+                        self::createNotif("Something went wrong. Please try again", 1);
+                    }
                 } else {
-                    self::createNotif("Something went wrong. Please try again", 1);
+                    $user = new User(...$data);
+                    if ($user->save()) {
+                        self::createNotif("New user added.", 1);
+                    } else {
+                        self::createNotif("Something went wrong. Please try again", 1);
+                    }
                 }
             } else {
                 self::createNotif($validate->showErrors, 0);
@@ -79,12 +106,38 @@ class Users extends Controller
         Redirect::to("/users");
     }
 
-    public static function confirm()
+    public static function confirm($id)
     {
-        // Your code goes here
+        if (self::get() and is_numeric($id)) {
+            $view = new View(PAGES_PATH . "/confirm");
+            self::csrfToken();
+            $user = User::getById($id);
+            if ($user) {
+                $data = array(
+                    "target" => "users",
+                    "id" => $user->getId()
+                );
+                $view->render("confirm", $data);
+            }
+        }
     }
-    public static function delete()
+    public static function remove()
     {
-        //your delete code goes here
+        if (self::post() and self::verifyRequest()) {
+            $user = User::getById($_POST['id']);
+            if ($user) {
+                if ($user->remove()) {
+                    self::createNotif("User has been removed", 1);
+                } else {
+                    self::createNotif("Something went wrong. Please try again.", 0);
+                }
+            } else {
+                self::createNotif("Something went wrong. Please try again.", 0);
+            }
+        } else {
+            self::createNotif("Something went wrong. Please try again.", 0);
+        }
+
+        Redirect::to("/users");
     }
 }

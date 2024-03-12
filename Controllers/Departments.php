@@ -120,7 +120,7 @@ class Departments extends Controller
             $view->render("confirm", $data);
         }
     }
-    public static function delete()
+    public static function remove()
     {
         self::checkAuth();
         if (self::post() and self::verifyRequest()) {

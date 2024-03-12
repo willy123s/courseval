@@ -46,8 +46,9 @@
             </div>
             <div class="flex-auto relative mb-6">
                 <select name="userType" id="userType" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent">
-                    <option value="User">User</option>
                     <option value="Admin">Admin</option>
+                    <option value="Chairman">Chairman</option>
+                    <option value="Instructor">Instructor</option>
                 </select>
                 <label for="userType" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">User Type <span class="text-danger">*</span></label>
             </div>

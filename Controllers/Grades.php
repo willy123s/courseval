@@ -8,6 +8,7 @@ use Makkari\Controllers\Controller;
 use Makkari\Models\Curriculum;
 use Makkari\Models\Curriculumdetail;
 use Makkari\Models\Grade;
+use Makkari\Models\Graderange;
 use Makkari\Models\Schoolyear;
 use Makkari\Models\Semester;
 use Makkari\Models\Student;
@@ -25,7 +26,8 @@ class Grades extends Controller
             $data = array(
                 "id" => $id,
                 "semesters" => Semester::getAll(),
-                "schoolyear" => Schoolyear::getAll()
+                "schoolyear" => Schoolyear::getAll(),
+                "graderange" => Graderange::getAll()
             );
             $view->render("addGrade", $data);
         }
@@ -68,7 +70,8 @@ class Grades extends Controller
             $data = array(
                 "grade" => $grade,
                 "semesters" => Semester::getAll(),
-                "schoolyear" => Schoolyear::getAll()
+                "schoolyear" => Schoolyear::getAll(),
+                "graderange" => Graderange::getAll()
             );
             $view->render("editGrade", $data);
         }

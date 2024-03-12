@@ -84,7 +84,14 @@ class Schoolyear extends Model
         }
         return $data;
     }
-
+    public static function updateStatuses()
+    {
+        $m = Model::getInstance();
+        $query = 'UPDATE schoolyears set status = :status';
+        $params = array(":status", "");
+        $q = $m->executeQuery($query, $params);
+        return $q->stmt->rowCount();
+    }
     public function save()
     {
         $m = Model::getInstance();

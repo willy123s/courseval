@@ -10,11 +10,11 @@ class Cours extends Model
     protected $course;
     protected $description;
 
-    public function __construct($id,$course,$description)
+    public function __construct($id, $course, $description)
     {
-           $this->id=$id;
-    $this->course=$course;
-    $this->description=$description;
+        $this->id = $id;
+        $this->course = $course;
+        $this->description = $description;
     }
 
     public function getId()
@@ -47,13 +47,14 @@ class Cours extends Model
         $this->description = $value;
     }
 
-    public static function getAll(){
-       
+    public static function getAll()
+    {
+
         $m = Model::getInstance();
         $list = [];
         $r = $m->all('courses');
-        if($r){
-            foreach($r as $v){
+        if ($r) {
+            foreach ($r as $v) {
                 $data = new Cours(...$v);
                 $list[] = $data;
             }
@@ -61,29 +62,30 @@ class Cours extends Model
         return $list;
     }
 
-    public static function getById($value){
+    public static function getById($value)
+    {
         $m = Model::getInstance();
         $data = NULL;
-        $r = $m->getOne('courses','id', $value);
-        if($r){
-            
+        $r = $m->getOne('courses', 'id', $value);
+        if ($r) {
+
             $data = new Cours(...$r);
-            
         }
         return $data;
     }
 
-    public function save(){
+    public function save()
+    {
         $m = Model::getInstance();
-        if($this->id){
+        if ($this->id) {
             $query = 'UPDATE courses SET course=:course,description=:description WHERE id=:id';
-            $params = array(':id'=>$this->id,':course'=>$this->course,':description'=>$this->description);
-            $result = $m->executeQuery($query,$params);
+            $params = array(':id' => $this->id, ':course' => $this->course, ':description' => $this->description);
+            $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
-        }else{
+        } else {
             $query = 'INSERT INTO courses VALUES (:id,:course,:description)';
-            $params = array(':id'=>$this->id,':course'=>$this->course,':description'=>$this->description);
-            $result = $m->executeQuery($query,$params);
+            $params = array(':id' => $this->id, ':course' => $this->course, ':description' => $this->description);
+            $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         }
     }
@@ -91,10 +93,9 @@ class Cours extends Model
     public function remove()
     {
         $m = Model::getInstance();
-        if($this->id){
-            $stmt=$m->delete('courses',$this->id);
+        if ($this->id) {
+            $stmt = $m->delete('courses', $this->id);
             return $stmt->stmt->rowCount();
         }
     }
 }
-

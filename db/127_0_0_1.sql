@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2023 at 11:24 PM
+-- Generation Time: Mar 12, 2024 at 01:51 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `course_chk`
 --
-DROP DATABASE IF EXISTS `course_chk`;
-CREATE DATABASE IF NOT EXISTS `course_chk` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `course_chk`;
 
 -- --------------------------------------------------------
 
@@ -42,7 +39,8 @@ CREATE TABLE `courses` (
 
 INSERT INTO `courses` (`id`, `course`, `description`) VALUES
 (1, 'IT', 'Information Technology'),
-(3, 'Samples', 'Sample');
+(4, 'BA', 'Bachelor of Business Administration'),
+(5, 'BPA', 'Bachelor of Public Administration');
 
 -- --------------------------------------------------------
 
@@ -117,7 +115,9 @@ INSERT INTO `curriculumdetails` (`id`, `currId`, `subId`, `yearId`, `semId`) VAL
 (52, 1, 56, 4, 1),
 (53, 1, 57, 4, 1),
 (54, 1, 58, 4, 1),
-(55, 1, 59, 4, 2);
+(57, 3, 5, 1, 1),
+(58, 4, 11, 1, 1),
+(61, 1, 59, 4, 2);
 
 -- --------------------------------------------------------
 
@@ -138,7 +138,9 @@ CREATE TABLE `curriculums` (
 
 INSERT INTO `curriculums` (`id`, `name`, `course_id`, `sy`) VALUES
 (1, 'BSIT 2022-2023', 1, '3'),
-(2, 'IT Curriculum 2021 - 2022', 1, '2');
+(2, 'IT Curriculum 2021 - 2022', 1, '2'),
+(3, 'BA-2023', 4, '4'),
+(4, 'BPA 2023-2024', 5, '4');
 
 -- --------------------------------------------------------
 
@@ -175,14 +177,6 @@ CREATE TABLE `enrollmentdetails` (
   `addedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `enrollmentdetails`
---
-
-INSERT INTO `enrollmentdetails` (`id`, `enrollmentId`, `currDetId`, `addedBy`, `addedAt`) VALUES
-(1, 1, 3, 2, '2023-11-20 00:00:00'),
-(2, 1, 3, 2, '2023-11-20 00:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -195,15 +189,40 @@ CREATE TABLE `enrollments` (
   `syId` int(11) NOT NULL,
   `semId` int(11) NOT NULL,
   `createdBy` int(11) NOT NULL,
-  `createdAt` datetime NOT NULL
+  `createdAt` datetime NOT NULL,
+  `status` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `graderange`
+--
+
+CREATE TABLE `graderange` (
+  `id` int(11) NOT NULL,
+  `grade` varchar(50) NOT NULL,
+  `description` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `enrollments`
+-- Dumping data for table `graderange`
 --
 
-INSERT INTO `enrollments` (`id`, `studId`, `syId`, `semId`, `createdBy`, `createdAt`) VALUES
-(1, 3, 0, 0, 2, '2023-11-20 00:00:00');
+INSERT INTO `graderange` (`id`, `grade`, `description`) VALUES
+(1, '1.00', '1.00'),
+(2, '1.25', '1.25'),
+(3, '1.50', '1.50'),
+(4, '1.75', '1.75'),
+(5, '2.00', '2.00'),
+(6, '2.25', '2.25'),
+(7, '2.50', '2.50'),
+(8, '2.75', '2.75'),
+(9, '3.00', '3.00'),
+(10, 'INC', 'Incomplete'),
+(11, '5.00', 'Failed'),
+(12, 'W', 'Widrawn'),
+(13, 'Drop', 'Droped');
 
 -- --------------------------------------------------------
 
@@ -220,19 +239,6 @@ CREATE TABLE `grades` (
   `schoolyear` int(11) NOT NULL,
   `isConfirmed` int(11) NOT NULL COMMENT '0 not confirmed, 1 Confirmed'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `grades`
---
-
-INSERT INTO `grades` (`id`, `studId`, `currDetailsId`, `grade`, `semester`, `schoolyear`, `isConfirmed`) VALUES
-(1, 3, 1, 'INC', 1, 3, 1),
-(4, 3, 3, '2.0', 1, 3, 1),
-(5, 3, 4, '3.0', 1, 3, 0),
-(6, 3, 5, '1.75', 1, 3, 0),
-(7, 3, 6, '1.25', 1, 3, 0),
-(8, 3, 7, '1.5', 1, 2, 0),
-(9, 3, 2, '5.0', 1, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -289,7 +295,7 @@ INSERT INTO `schoolyears` (`id`, `schoolyear`, `status`) VALUES
 (1, '2020-2021', ''),
 (2, '2021-2022', ''),
 (3, '2022-2023', ''),
-(4, '2023-2024', '');
+(4, '2023-2024', 'Active');
 
 -- --------------------------------------------------------
 
@@ -299,17 +305,18 @@ INSERT INTO `schoolyears` (`id`, `schoolyear`, `status`) VALUES
 
 CREATE TABLE `semesters` (
   `id` int(11) NOT NULL,
-  `sem` varchar(50) NOT NULL
+  `sem` varchar(50) NOT NULL,
+  `status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `semesters`
 --
 
-INSERT INTO `semesters` (`id`, `sem`) VALUES
-(1, '1st Semester'),
-(2, '2nd Semester'),
-(3, 'Summer');
+INSERT INTO `semesters` (`id`, `sem`, `status`) VALUES
+(1, '1st Semester', 'Active'),
+(2, '2nd Semester', ''),
+(3, 'Summer', '');
 
 -- --------------------------------------------------------
 
@@ -328,14 +335,6 @@ CREATE TABLE `students` (
   `currId` int(11) NOT NULL,
   `password` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `students`
---
-
-INSERT INTO `students` (`id`, `studNo`, `fname`, `lname`, `mname`, `email`, `courseId`, `currId`, `password`) VALUES
-(2, '23-SC-0123', 'Pedro', 'Calungsod', 'M', 'pedrocalungsod@psu.edu.ph', 1, 1, '$2y$10$ScRI6vLAvXPn46BXoYta4eMLA6LWwy7BN5yrbffwmu7aLVhUvdz.i'),
-(3, '23-SC-0124', 'Juan', 'Dela Cruz', 'D', 'juan@gmail.com', 1, 1, '$2y$10$WNZfnbkJkDU69dKaEcBVjO85DD2R8.ZOL0dXI19t4lbZUn5ktM/hK');
 
 -- --------------------------------------------------------
 
@@ -409,7 +408,8 @@ INSERT INTO `subjects` (`id`, `subjectCode`, `description`, `units`) VALUES
 (56, 'ELEC 4', 'Elective 4 (Special Topics on Data Analytics 2) (CO)', 3),
 (57, 'SA 101', 'System Administration and Maintenance (CO)', 3),
 (58, 'SIA 101', 'Systems Integration and Architecture (CO)', 3),
-(59, 'INTERN 101', 'Internship (OJT/ PRACTICUM)', 6);
+(59, 'INTERN 101', 'Internship (OJT/ PRACTICUM)', 6),
+(60, 'IT1000', 'Test', 3);
 
 -- --------------------------------------------------------
 
@@ -435,7 +435,28 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `empno`, `fname`, `lname`, `mname`, `email`, `password`, `courseId`, `userType`) VALUES
 (1, 'SC-0000', 'Admin', 'Admin', 'Admin', 'admin@gmail.com', '$2y$10$sehniIXMi8GryxPhgLQ/.OouW9fA2ogjYr3jrc1SG8lldj1q8nRXa', 1, 'Admin'),
-(2, 'SC-0001', 'Faculty', 'Faculty', 'Faculty', 'faculty@gmail.com', '$2y$10$sehniIXMi8GryxPhgLQ/.OouW9fA2ogjYr3jrc1SG8lldj1q8nRXa', 1, 'User');
+(2, 'SC-0001', 'Faculty', 'Faculty', 'Faculty', 'faculty@gmail.com', '$2y$10$6nrZRs1aiRbHhSjURK9Au.8wZZV0XZkaahRW/2W0ndgDq7cbWpFFq', 1, 'Instructor'),
+(3, 'SC-0002', 'Second', 'Lastname', 'Middle', 'sc0002@gmail.com', '$2y$10$8DFTb4x/HiQljLqPAoo0iun8.1qoX7bDsC0CzbBk09rnUT.HN96FW', 1, 'Instructor');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `usertypes`
+--
+
+CREATE TABLE `usertypes` (
+  `id` int(11) NOT NULL,
+  `utype` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `usertypes`
+--
+
+INSERT INTO `usertypes` (`id`, `utype`) VALUES
+(1, 'Admin'),
+(2, 'Chairman'),
+(3, 'Instructor');
 
 -- --------------------------------------------------------
 
@@ -499,6 +520,12 @@ ALTER TABLE `enrollments`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `graderange`
+--
+ALTER TABLE `graderange`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `grades`
 --
 ALTER TABLE `grades`
@@ -543,6 +570,12 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `empno` (`empno`);
 
 --
+-- Indexes for table `usertypes`
+--
+ALTER TABLE `usertypes`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `yearlevels`
 --
 ALTER TABLE `yearlevels`
@@ -556,19 +589,19 @@ ALTER TABLE `yearlevels`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `curriculumdetails`
 --
 ALTER TABLE `curriculumdetails`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `curriculums`
 --
 ALTER TABLE `curriculums`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `departments`
@@ -580,19 +613,25 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `enrollmentdetails`
 --
 ALTER TABLE `enrollmentdetails`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `graderange`
+--
+ALTER TABLE `graderange`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `prerequisites`
@@ -616,19 +655,25 @@ ALTER TABLE `semesters`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `subjects`
 --
 ALTER TABLE `subjects`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `usertypes`
+--
+ALTER TABLE `usertypes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `yearlevels`

@@ -124,19 +124,36 @@ class Enrollment extends Model
             ":semid" => $semid,
         );
         $list = [];
-        $r = $m->executeQuery('SELECT * FROM enrollments WHERE (syId=:syid and semId=:semid) and createdBy=:createdby order by id desc limit 1', $params);
+        $r = $m->executeQuery('SELECT * FROM enrollments WHERE (syId=:syid and semId=:semid) and createdBy=:createdby order by id desc', $params);
         if ($r) {
-            if ($r->stmt->rowCount()) {
-                $v = $r->stmt->fetch(\PDO::FETCH_ASSOC);
+            $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($r as $v) {
                 $data = new Enrollment(...$v);
                 $list[] = $data;
             }
         }
         return $list;
     }
+    public static function ifExist($studId, $semid, $syid)
+    {
+        $m = Model::getInstance();
+        $data = NULL;
+        $params = array(
+            ":studid" => $studId,
+            ":semid" => $semid,
+            ":syid" => $syid,
+        );
+        $r = $m->executeQuery('SELECT * FROM enrollments WHERE studId=:studid and syId=:syid and semId=:semid order by id desc limit 1', $params);
+        if ($r) {
+            if ($r->stmt->rowCount()) {
+                $v = $r->stmt->fetch(\PDO::FETCH_ASSOC);
+                $data = new Enrollment(...$v);
+            }
+        }
+        return $data;
+    }
     public static function getPendingByStudent($studId, $status)
     {
-
         $m = Model::getInstance();
         $params = array(
             ":studid" => $studId,

@@ -5,7 +5,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
 <div class="px-8">
     <div class="bg-white p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10">
         <div class="mb-4">
-            <a href="#" data-remote="/students/create" data-size="w-full md:w-2/5 lg:w-1/5" class="pop px-3 py-2 text-sm bg-brand hover:bg-brand-dark rounded-md text-slate-100 transition-all">Add Studens</a>
+            <a href="#" data-remote="/students/create" data-size="w-full md:w-2/5 lg:w-1/5" class="pop px-3 py-2 text-sm bg-brand hover:bg-brand-dark rounded-md text-slate-100 transition-all">Add Student</a>
             <a href="#" data-remote="/students/import" data-size="w-full md:w-2/5 lg:w-1/5" class="pop hidden px-3 py-2 text-sm bg-brand hover:bg-brand-dark rounded-md text-slate-100 transition-all">Import From CSV</a>
         </div>
         <div class="flex flex-row items-center justify-between mb-4">
@@ -20,7 +20,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
                         <th class="px-2 py-3">Stud #</th>
                         <th class="px-2 py-3">Name</th>
                         <th class="px-2 py-3">Course</th>
-                        <th class="px-2 py-3">Year Lvl</th>
+                        <th class="px-2 py-3">Curriculum</th>
                         <th class=" px-2 py-3">Action</th>
                     </tr>
                 </thead>

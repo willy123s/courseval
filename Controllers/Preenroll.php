@@ -21,6 +21,7 @@ class Preenroll extends Controller
         $sy = Schoolyear::getActive();
         $sem = Semester::getActive();
         $enrollment = Enrollment::getCourseCheked($sy->getId(), $sem->getId(), $_SESSION['user_id']);
+
         $data = array(
             "pageTitle" => "Course Check",
             "pageDesc" => "Manage Course Checking",
@@ -59,20 +60,25 @@ class Preenroll extends Controller
                 "createdAt" => date("Y-m-d H:i:s"),
                 "status" => "Pending"
             );
-            $enr = Enrollment::getPendingByStudent($enData['studId'], 'Pending');
+            $exist = Enrollment::ifExist($enData['studId'], $enData['semId'], $enData['syId']);
+            if ($exist == NULL) :
+                $enr = Enrollment::getPendingByStudent($enData['studId'], 'Pending');
 
-            if ($enr == 0) {
+                if ($enr == 0) {
 
-                $enrollment = new Enrollment(...$enData);
-                $enid = $enrollment->save();
-                if ($enid) {
-                    self::createNotif("New transaction added.", 1);
+                    $enrollment = new Enrollment(...$enData);
+                    $enid = $enrollment->save();
+                    if ($enid) {
+                        self::createNotif("New transaction added.", 1);
+                    } else {
+                        self::createNotif("Something went wrong. Please try again.", 0);
+                    }
                 } else {
-                    self::createNotif("Something went wrong. Please try again.", 0);
+                    $enid = $enr->getId();
                 }
-            } else {
-                $enid = $enr->getId();
-            }
+            else :
+                $enid = $exist->getId();
+            endif;
             Redirect::to("/preenroll/transaction/{$_POST['studno']}/{$enid}");
         } else {
             Redirect::to("/preenroll");
