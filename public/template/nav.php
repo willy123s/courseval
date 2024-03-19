@@ -58,11 +58,18 @@ use function Makkari\Helpers\Breadcrumb;
                         <span class="">Course Check</span>
                     </div>
                 </a>
+                <a href="/proofs" class="relative group flex flex-col lg:flex-row lg:items-center gap-1 px-3 py-2 hover:bg-brand/10 rounded-lg <?= $GLOBALS['currentpage'] == "proof" ? "bg-brand/5" : "" ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    <span class="hidden lg:block">Proof of Grades</span>
+                    <div class="tooltip text-sm whitespace-nowrap hidden z-10 group-hover:block lg:group-hover:hidden absolute left-full top-0  w-fit px-3 py-2 rounded-lg text-slate-50 bg-slate-700/80 backdrop-blur-md">
+                        <span class="">Proof of Grades</span>
+                    </div>
+                </a>
             <?php
             endif;
             if ($_SESSION['user_type'] != "Student") :
-
-
 
             ?>
                 <p class="hidden lg:block text-sm my-2 text-slate-500 font-semibold px-2">File Management</p>

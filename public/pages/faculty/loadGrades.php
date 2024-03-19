@@ -1,11 +1,20 @@
 <?php
 
 ?>
-<div class="bg-white/60 backdrop-blur-md sticky top-20 p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
-    <div class="font-bold uppercase text-brand"><?= $user->getFullName() ?></div>
-    <h2 class="text-xl font-bold"><?= $curriculum->getName() ?></h2>
-    <p><?= $curriculum->getCourse()->getDescription() ?></p>
-    <p><?= $curriculum->getSyDet()->getSchoolyear() ?></p>
+<div class="flex flex-row gap-4 bg-white/60 backdrop-blur-md sticky top-20 p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
+    <div>
+        <div class="font-bold uppercase text-brand"><?= $user->getFullName() ?></div>
+        <h2 class="text-xl font-bold"><?= $curriculum->getName() ?></h2>
+        <p><?= $curriculum->getCourse()->getDescription() ?></p>
+        <p><?= $curriculum->getSyDet()->getSchoolyear() ?></p>
+    </div>
+    <div class="max-h-full overflow-y-auto">
+        <?php
+        foreach ($proofs as $proof) {
+            echo "<a href='#' data-remote='/proofs/v/{$proof->getId()}' class='pop hover:text-blue-500 hover:underline' >Grade for SY {$proof->getSY()} {$proof->getSem()}</a>";
+        }
+        ?>
+    </div>
 </div>
 <?php
 foreach ($yearlevels as $year) :

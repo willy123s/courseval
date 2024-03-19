@@ -5,6 +5,7 @@ namespace Makkari\Controllers;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Curriculum;
 use Makkari\Models\Curriculumdetail;
+use Makkari\Models\Proof;
 use Makkari\Models\Schoolyear;
 use Makkari\Models\Semester;
 use Makkari\Models\Student;
@@ -62,6 +63,7 @@ class Studentgrades extends Controller
                     "user" => $userdata,
                     "curriculum" => $curriculum,
                     "yearlevels" => $lvls,
+                    "proofs" => Proof::getByUserId($userdata->getId())
                 );
                 $view->render("loadGrades", $data);
             } else {

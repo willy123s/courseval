@@ -2,6 +2,7 @@
 session_start();
 
 require_once("./Helpers/BreadCrumbsHelper.php");
+require_once("./Helpers/FileUpload.php");
 
 use Makkari\Helpers\Breadcrumb;
 // Path to the .env file
