@@ -17,14 +17,20 @@ use Makkari\Models\Yearlevel;
 class Grades extends Controller
 {
 
-    public static function create($id)
+    public static function create($id, $student = null)
     {
         self::checkAuth();
         self::csrfToken();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/std");
+            if ($_SESSION['user_type'] != "Student") {
+                $student = Student::getById($student);
+            } else {
+                $student = Student::getById($_SESSION['user_id']);
+            }
             $data = array(
                 "id" => $id,
+                "studentid" => $student->getId(),
                 "semesters" => Semester::getAll(),
                 "schoolyear" => Schoolyear::getAll(),
                 "graderange" => Graderange::getAll()
@@ -36,6 +42,7 @@ class Grades extends Controller
     {
         if (self::get()) {
             $userdata = self::usersData($_SESSION['user_id']);
+
             $curriculum = Curriculum::getById($userdata->getCurrId());
             $levels = Yearlevel::getAll();
             $lvls = [];
@@ -67,6 +74,7 @@ class Grades extends Controller
 
             $grade = Grade::getById($id);
             $view = new View(PAGES_PATH . "/grades");
+
             $data = array(
                 "grade" => $grade,
                 "semesters" => Semester::getAll(),
@@ -79,9 +87,9 @@ class Grades extends Controller
     public static function update()
     {
         $curdet = 0;
+        $st = 0;
         if (self::post() and self::verifyRequest()) {
             $data = array(
-                "studId" => $_SESSION['user_id'],
                 "gradeid" => $_POST['id'],
                 "grade" => $_POST['grade'],
                 "semester" => $_POST['semester'],
@@ -89,7 +97,6 @@ class Grades extends Controller
                 "isConfirmed" => 0,
             );
             $ruleset = array(
-                "studId" => ['required'],
                 "grade" => ['required'],
                 "semester" => ['required'],
                 "schoolyear" => ['required'],
@@ -101,6 +108,7 @@ class Grades extends Controller
                 $grade->setSemester($data['semester']);
                 $grade->setSchoolyear($data['schoolyear']);
                 $curdet = $grade->getCurrDetailsId();
+                $st = $grade->getStudId();
                 if ($grade->save()) {
                     self::createNotif("Your grade is updated", 1);
                 } else {
@@ -110,18 +118,19 @@ class Grades extends Controller
                 self::createNotif($validate->showErrors, 0);
             }
         }
-        if ($curdet != 0) {
-            Redirect::to("/grades/viewgrades/{$curdet}");
+        if ($_SESSION['user_type'] != 'Student') {
+            Redirect::to("/studentgrades/viewgrades/{$st}/{$curdet}");
         } else {
-            Redirect::to("/grades/mycurriculums");
+            Redirect::to("/grades/viewgrades/{$curdet}");
         }
     }
     public static function save()
     {
+        $student = Student::getById($_POST['studid'] ?? $_SESSION['user_id']);
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => NULL,
-                "studId" => $_SESSION['user_id'],
+                "studId" => $student->getId(),
                 "currDetailsId" => $_POST['id'],
                 "grade" => $_POST['grade'],
                 "semester" => $_POST['semester'],
@@ -149,7 +158,13 @@ class Grades extends Controller
                 self::createNotif($validate->showErrors, 0);
             }
         }
-        Redirect::to("/myCurriculums");
+
+        if ($_SESSION['user_type'] != 'Student') {
+            $student = Student::getById($_POST['studid']);
+            Redirect::to("/studentgrades//{$student->getStudNo()}");
+        } else {
+            Redirect::to("/MyCurriculums");
+        }
     }
     public static function accept($studid, $id)
     {
@@ -187,8 +202,10 @@ class Grades extends Controller
     public static function remove()
     {
         $curdet = 0;
+        $st = 0;
         if (self::post() and self::verifyRequest()) {
             $grades = Grade::getById($_POST['id']);
+            $st = $grades->getStudId();
             $curdet = $grades->getCurrDetailsId();
             if ($grades != NULL) {
                 if ($grades->remove()) {
@@ -202,8 +219,8 @@ class Grades extends Controller
         } else {
             self::createNotif("Something went wrong. Please try again", 0);
         }
-        if ($curdet != 0) {
-            Redirect::to("/grades/viewgrades/{$curdet}");
+        if ($_SESSION['user_id'] != 'Student') {
+            Redirect::to("/studentgrades/viewgrades/{$st}/{$curdet}");
         } else {
             Redirect::to("/grades/viewgrades/{$curdet}");
         }

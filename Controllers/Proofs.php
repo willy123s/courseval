@@ -17,7 +17,7 @@ class Proofs extends Controller
         self::checkAuth();
         if (self::get()) {
             $view = new View(PAGES_PATH . "/proofs");
-            $proofs = Proof::getAll();
+            $proofs = Proof::getByUserId($_SESSION['user_id']);
             $data = array(
                 "pageTitle" => "Proof of Grades",
                 "pageDesc" => "Manage Proof of Grades",

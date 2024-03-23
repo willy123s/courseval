@@ -35,6 +35,7 @@ class Studentgrades extends Controller
                 "user" => $userdata,
                 "curriculum" => $curriculum,
                 "yearlevels" => $lvls,
+                "proofs" => Proof::getByUserId($userdata->getId())
             );
         } else {
             $data = array(
@@ -63,6 +64,7 @@ class Studentgrades extends Controller
                     "user" => $userdata,
                     "curriculum" => $curriculum,
                     "yearlevels" => $lvls,
+                    "semesters" => Semester::getAll(),
                     "proofs" => Proof::getByUserId($userdata->getId())
                 );
                 $view->render("loadGrades", $data);
@@ -97,29 +99,8 @@ class Studentgrades extends Controller
                 "yearlevels" => $lvls,
                 "subject" => $currDetails
             );
+
             $view->render("viewgrades", $data);
         }
-    }
-
-    public static function create()
-    {
-        // Your code here
-    }
-    public static function edit()
-    {
-        // Your edit code goes here
-    }
-    public static function save()
-    {
-        // Your save code goes here
-    }
-
-    public static function confirm()
-    {
-        // Your code goes here
-    }
-    public static function delete()
-    {
-        //your delete code goes here
     }
 }

@@ -46,6 +46,14 @@ class Controller
         }
         return $documentCode;
     }
+    protected static function generateToken($length = 32)
+    {
+        // Generate a random string
+        $token = bin2hex(random_bytes($length));
+
+        return $token;
+    }
+
     public static function getDirectDownloadLink($shareLink)
     {
         // Extract the file ID from the share link

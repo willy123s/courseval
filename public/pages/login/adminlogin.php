@@ -29,7 +29,7 @@
             </div>
             <button class="w-full bg-brand hover:bg-brand-dark  rounded-md px-4 py-3 text-stone-50 transition-all">Save</button>
             <div class="py-4 text-center">
-                <a href="#" class="text-slate-500 text-sm">Forgot password?</a>
+                <a href="/recover" class="text-slate-500 text-sm">Forgot password?</a>
             </div>
         </form>
     </div>

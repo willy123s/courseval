@@ -11,6 +11,7 @@
     <form action="/grades/update" method="post">
         <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
         <input type="hidden" name="id" id="id" value="<?= $grade->getId() ?>">
+        <input type="hidden" name="studid" id="studid" value="<?= $grade->getId() ?>">
 
         <div class="relative mb-6">
             <select name="grade" id="grade" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent">

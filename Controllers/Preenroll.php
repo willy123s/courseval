@@ -51,44 +51,50 @@ class Preenroll extends Controller
         self::checkAuth();
         if (self::post() and self::verifyRequest()) {
             $student = Student::getByStudNo($_POST['studno']);
-            $enData = array(
-                "id" => NULL,
-                "studId" => $student->getId(),
-                "syId" => self::clean($_POST['sy']),
-                "semId" => self::clean($_POST['semester']),
-                "createdBy" => $_SESSION['user_id'],
-                "createdAt" => date("Y-m-d H:i:s"),
-                "status" => "Pending"
-            );
-            $exist = Enrollment::ifExist($enData['studId'], $enData['semId'], $enData['syId']);
-            if ($exist == NULL) :
-                $enr = Enrollment::getPendingByStudent($enData['studId'], 'Pending');
+            if ($student != NULL) {
+                $enData = array(
+                    "id" => NULL,
+                    "studId" => $student->getId(),
+                    "syId" => self::clean($_POST['sy']),
+                    "semId" => self::clean($_POST['semester']),
+                    "createdBy" => $_SESSION['user_id'],
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "status" => "Pending"
+                );
+                $exist = Enrollment::ifExist($enData['studId'], $enData['semId'], $enData['syId']);
+                if ($exist == NULL) :
+                    $enr = Enrollment::getPendingByStudent($enData['studId'], 'Pending');
 
-                if ($enr == 0) {
+                    if ($enr == NULL) {
 
-                    $enrollment = new Enrollment(...$enData);
-                    $enid = $enrollment->save();
-                    if ($enid) {
-                        self::createNotif("New transaction added.", 1);
+                        $enrollment = new Enrollment(...$enData);
+                        $enid = $enrollment->save();
+                        if ($enid) {
+                            self::createNotif("New transaction added.", 1);
+                        } else {
+                            self::createNotif("Something went wrong. Please try again.", 0);
+                        }
                     } else {
-                        self::createNotif("Something went wrong. Please try again.", 0);
+                        $enid = $enr->getId();
                     }
-                } else {
-                    $enid = $enr->getId();
-                }
-            else :
-                $enid = $exist->getId();
-            endif;
-            Redirect::to("/preenroll/transaction/{$_POST['studno']}/{$enid}");
+                else :
+                    $enid = $exist->getId();
+                endif;
+                Redirect::to("/preenroll/transaction/{$enid}/{$_POST['studno']}");
+            } else {
+                self::createNotif("Student do not exist.", 0);
+                Redirect::to("/preenroll");
+            }
         } else {
             Redirect::to("/preenroll");
         }
     }
 
-    public static function transaction($student = 0, $enrollment)
+    public static function transaction($enrollment, $student = NULL)
     {
         self::checkAuth();
         if (self::get()) {
+
             $student = Student::getByStudNo($student);
             $view = new View(PAGES_PATH . "/faculty");
 
@@ -199,7 +205,7 @@ class Preenroll extends Controller
                 self::createNotif("Enrollment is now Finalized.", 0);
             }
         }
-        Redirect::to("/preenroll/transaction/{$student->getStudNo()}/{$enroll->getId()}");
+        Redirect::to("/preenroll/transaction/{$enroll->getId()}/{$student->getStudNo()}");
     }
     public static function remove()
     {

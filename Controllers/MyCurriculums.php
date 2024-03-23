@@ -5,6 +5,7 @@ namespace Makkari\Controllers;
 use Makkari\Controllers\Controller;
 use Makkari\Models\Curriculum;
 use Makkari\Models\Curriculumdetail;
+use Makkari\Models\Semester;
 use Makkari\Models\Yearlevel;
 
 class MyCurriculums extends Controller
@@ -28,30 +29,9 @@ class MyCurriculums extends Controller
                 "userdata" => $userdata,
                 "curriculum" => $curriculum,
                 "yearlevels" => $lvls,
+                "semesters" => Semester::getAll()
             );
             $view->render("checklists", $data);
         }
-    }
-
-    public static function create()
-    {
-        // Your code here
-    }
-    public static function edit()
-    {
-        // Your edit code goes here
-    }
-    public static function save()
-    {
-        // Your save code goes here
-    }
-
-    public static function confirm()
-    {
-        // Your code goes here
-    }
-    public static function delete()
-    {
-        //your delete code goes here
     }
 }

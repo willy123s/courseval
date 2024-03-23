@@ -16,7 +16,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
             <button id="loadGrades" class="w-full bg-brand hover:bg-brand-dark transition-all rounded-md px-4 py-3 text-stone-50">Load Checklist/Grade</button>
         </div>
     </div>
-    <div class="" id="itemContainer">
+    <div class="flex-auto" id="itemContainer">
         <?php
         if (isset($curriculum)) {
             require_once(PAGES_PATH . "/faculty/loadGrades.php");

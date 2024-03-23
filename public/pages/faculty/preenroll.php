@@ -64,7 +64,7 @@ if (isset($_SESSION['coursecheck'])) {
                             <td class="px-2 py-3"><?= $sem->getSem() ?></td>
                             <td class="px-2 py-3"><?= $enroll->getStatus() ?></td>
                             <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                <a href="/preenroll/transaction/<?= $student->getStudNo() ?>/<?= $enroll->getId() ?>" class="text-sm bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-1 rounded-md">
+                                <a href="/preenroll/transaction/<?= $enroll->getId() ?>/<?= $student->getStudNo() ?>" class="text-sm bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-1 rounded-md">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                                     </svg>

@@ -159,6 +159,7 @@ class Enrollment extends Model
             ":studid" => $studId,
             ":status" => $status,
         );
+        $data = NULL;
         $r = $m->executeQuery('SELECT * FROM enrollments WHERE studId=:studid and status=:status order by id desc limit 1', $params);
         if ($r) {
             if ($r->stmt->rowCount()) {
