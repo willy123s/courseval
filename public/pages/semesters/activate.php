@@ -1,5 +1,5 @@
 <div class="flex flex-row justify-between items-center mb-6">
-    <p class="font-semibold text-lg text-slate-500">Update School Year</p>
+    <p class="font-semibold text-lg text-slate-500">Change Status</p>
     <button class="close text-slate-400 hover:text-slate-700 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -8,9 +8,9 @@
 </div>
 
 <div class="">
-    <form action="/schoolyears/update" method="post">
+    <form action="/semesters/save" method="post">
         <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-        <input type="hidden" name="id" id="id" value="<?= $sy->getId() ?>">
+        <input type="hidden" name="id" id="id" value="<?= $semid ?>">
 
         <div class=" relative mb-6">
             <select name="status" id="status" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent">

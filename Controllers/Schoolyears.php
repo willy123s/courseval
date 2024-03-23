@@ -73,18 +73,23 @@ class Schoolyears extends Controller
         if (self::post() and self::verifyRequest()) {
             $data = array(
                 "id" => $_POST['id'],
-                "schoolyear" => self::clean($_POST['sy']),
-                "status" => "Active"
+                "status" => self::clean($_POST['status'])
             );
             $ruleset = array(
                 "id" => ['required'],
-                "schoolyear" => ['required'],
+
             );
             $validate = Validations::validateData($data, $ruleset);
 
             if (empty($validate->errors)) {
+                $schoolyears = Schoolyear::getAll();
+                foreach ($schoolyears as $schoolyear) {
+                    $schoolyear->setStatus("");
+                    $schoolyear->save();
+                }
                 $sy = Schoolyear::getById($data['id']);
-                $sy->setSchoolyear($data['schoolyear']);
+                $sy->setStatus($data['status']);
+
                 if ($sy->save()) {
                     self::createNotif("Schoolyear is now updated", 1);
                 } else {

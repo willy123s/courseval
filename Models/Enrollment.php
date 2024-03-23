@@ -152,15 +152,17 @@ class Enrollment extends Model
         }
         return $data;
     }
-    public static function getPendingByStudent($studId, $status)
+    public static function getPendingByStudent($studId, $semid, $syid, $status)
     {
         $m = Model::getInstance();
         $params = array(
             ":studid" => $studId,
+            ":semid" => $semid,
+            ":syid" => $syid,
             ":status" => $status,
         );
         $data = NULL;
-        $r = $m->executeQuery('SELECT * FROM enrollments WHERE studId=:studid and status=:status order by id desc limit 1', $params);
+        $r = $m->executeQuery('SELECT * FROM enrollments WHERE studId=:studid and syId=:syid and semId=:semid and status=:status order by id desc limit 1', $params);
         if ($r) {
             if ($r->stmt->rowCount()) {
                 $v = $r->stmt->fetch(\PDO::FETCH_ASSOC);

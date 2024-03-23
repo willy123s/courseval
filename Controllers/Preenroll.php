@@ -63,20 +63,20 @@ class Preenroll extends Controller
                 );
                 $exist = Enrollment::ifExist($enData['studId'], $enData['semId'], $enData['syId']);
                 if ($exist == NULL) :
-                    $enr = Enrollment::getPendingByStudent($enData['studId'], 'Pending');
+                    // $enr = Enrollment::getPendingByStudent($enData['studId'], $enData['semId'], $enData['syId'], 'Pending');
 
-                    if ($enr == NULL) {
+                    // if ($enr == NULL) {
 
-                        $enrollment = new Enrollment(...$enData);
-                        $enid = $enrollment->save();
-                        if ($enid) {
-                            self::createNotif("New transaction added.", 1);
-                        } else {
-                            self::createNotif("Something went wrong. Please try again.", 0);
-                        }
+                    $enrollment = new Enrollment(...$enData);
+                    $enid = $enrollment->save();
+                    if ($enid) {
+                        self::createNotif("New transaction added.", 1);
                     } else {
-                        $enid = $enr->getId();
+                        self::createNotif("Something went wrong. Please try again.", 0);
                     }
+                // } else {
+                //     $enid = $enr->getId();
+                // }
                 else :
                     $enid = $exist->getId();
                 endif;
