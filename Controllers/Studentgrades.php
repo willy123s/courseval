@@ -32,6 +32,7 @@ class Studentgrades extends Controller
                 "pageTitle" => "Student Grades",
                 "pageDesc" => "Confirm or Add Grades of Student",
                 "userdata" => self::usersData($_SESSION['user_id']),
+                "semesters" => Semester::getAll(),
                 "user" => $userdata,
                 "curriculum" => $curriculum,
                 "yearlevels" => $lvls,

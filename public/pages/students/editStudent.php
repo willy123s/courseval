@@ -8,7 +8,7 @@
 </div>
 
 <div class="">
-    <form action="/students/save" method="post">
+    <form action="/students/update" method="post">
         <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
         <input type="hidden" name="id" id="id" value="<?= $student->getId() ?>">
 

@@ -19,44 +19,51 @@ require_once(TEMPLATE_PATH . "/nav.php");
 </div>
 <div class="px-8 gap-4">
     <div class="">
-        <div class="bg-white flex flex-row gap-4 p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
-            <div class="w-96 shrink-0">
-                <div class="relative mb-6">
-                    <select name="year" id="year" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent">
-                        <?php
-                        foreach ($yearlevels as $yearlevel) {
-                            echo "<option value='{$yearlevel->getId()}'>{$yearlevel->getYear()}</option>";
-                        }
-                        ?>
+        <?php
+        if ($endetails->getStatus() == "Pending") {
+        ?>
+            <div class="bg-white flex flex-row gap-4 p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
+                <div class="w-96 shrink-0">
+                    <div class="relative mb-6">
+                        <select name="year" id="year" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent">
+                            <?php
+                            foreach ($yearlevels as $yearlevel) {
+                                echo "<option value='{$yearlevel->getId()}'>{$yearlevel->getYear()}</option>";
+                            }
+                            ?>
 
-                    </select>
-                    <label for="year" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Year Level <span class="text-danger">*</span></label>
+                        </select>
+                        <label for="year" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Year Level <span class="text-danger">*</span></label>
+                    </div>
+                    <div class="relative mb-6">
+                        <select name="year" id="sem" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent">
+                            <?php
+                            foreach ($semesters as $semester) {
+                                echo "<option value='{$semester->getId()}'>{$semester->getSem()}</option>";
+                            }
+                            ?>
+                        </select>
+                        <label for="year" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Grade <span class="text-danger">*</span></label>
+                    </div>
+
+                    <button id="loadSubjects" class="w-full bg-brand hover:bg-brand-dark transition-all rounded-md px-3 py-2 text-sm text-stone-50">Load Subjects</button>
+
                 </div>
-                <div class="relative mb-6">
-                    <select name="year" id="sem" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent">
-                        <?php
-                        foreach ($semesters as $semester) {
-                            echo "<option value='{$semester->getId()}'>{$semester->getSem()}</option>";
-                        }
-                        ?>
-                    </select>
-                    <label for="year" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Grade <span class="text-danger">*</span></label>
+                <div class="flex-auto" id="itemContainer">
+
                 </div>
-
-                <button id="loadSubjects" class="w-full bg-brand hover:bg-brand-dark transition-all rounded-md px-3 py-2 text-sm text-stone-50">Load Subjects</button>
-
             </div>
-            <div class="flex-auto" id="itemContainer">
-
-            </div>
-        </div>
-
+        <?php } ?>
         <div class="bg-white flex flex-col gap-4 p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
             <div class="flex flex-row justify-between items-center">
                 <h2 class="text-lg font-semibold">Subjects to enroll for</h2>
                 <div class="flex flex-row gap-2 items-center">
                     <p class="px-2 py-1 text-sm rounded-md bg-slate-100"><?= $endetails->getStatus() ?></p>
-                    <a href="#" data-remote="/preenroll/finalize/<?= $endetails->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand hover:bg-brand-dark transition-all rounded-md px-2 py-1 text-sm text-stone-50">Finalize</a>
+                    <?php
+                    if ($endetails->getStatus() == "Pending") {
+                    ?>
+                        <a href="#" data-remote="/preenroll/finalize/<?= $endetails->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand hover:bg-brand-dark transition-all rounded-md px-2 py-1 text-sm text-stone-50">Finalize</a>
+                    <?php } ?>
                 </div>
             </div>
 

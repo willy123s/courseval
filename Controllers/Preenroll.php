@@ -186,26 +186,25 @@ class Preenroll extends Controller
     public static function finalize($enid)
     {
         if (self::get()) {
-            $msgbox = new Msgbox("Finalize", "Are you sure you want to finalize this preenrollment?", "preenroll/msgfinalize/", $enid);
+            $msgbox = new Msgbox("Finalize", "Are you sure you want to finalize this preenrollment?", "preenroll/msgfinalize", $enid);
             $msgbox->render();
         }
     }
     public static function msgfinalize()
     {
-        if (self::post()) {
-            $data = array(
-                "id" => $_POST['id']
-            );
-            $enroll = Enrollment::getById($data['id']);
-            $student = $enroll->getStudent();
-            $enroll->setStatus("Completed");
-            if ($enroll->save()) {
-                self::createNotif("Enrollment is now Finalized.", 1);
-            } else {
-                self::createNotif("Enrollment is now Finalized.", 0);
+        $enroll = Enrollment::getById($_POST['id']);
+        if ($enroll != NULL) {
+            if (self::post()) {
+                $student = $enroll->getStudent();
+                $enroll->setStatus("Completed");
+                if ($enroll->save()) {
+                    self::createNotif("Enrollment is now Finalized.", 1);
+                } else {
+                    self::createNotif("Enrollment is now Finalized.", 0);
+                }
             }
+            Redirect::to("/preenroll/transaction/{$enroll->getId()}/{$student->getStudNo()}");
         }
-        Redirect::to("/preenroll/transaction/{$enroll->getId()}/{$student->getStudNo()}");
     }
     public static function remove()
     {
