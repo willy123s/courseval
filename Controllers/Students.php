@@ -130,7 +130,7 @@ class Students extends Controller
                 $student->setMname($data['mname']);
                 $student->setEmail($data['email']);
                 $student->setCourseId($data['courseId']);
-                $student->setCurrId($data['courseId']);
+                $student->setCurrId($data['currId']);
                 if ($student->save()) {
                     self::createNotif("Student record is now updated.", 1);
                 } else {
@@ -155,7 +155,7 @@ class Students extends Controller
             $view->render("confirm", $data);
         }
     }
-    public static function delete()
+    public static function remove()
     {
         self::checkAuth();
         if (self::post() and self::verifyRequest()) {

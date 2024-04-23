@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 12, 2024 at 01:51 PM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Apr 23, 2024 at 10:04 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `course_chk`
 --
+CREATE DATABASE IF NOT EXISTS `course_chk` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `course_chk`;
 
 -- --------------------------------------------------------
 
@@ -31,7 +33,7 @@ CREATE TABLE `courses` (
   `id` int(11) NOT NULL,
   `course` varchar(150) NOT NULL,
   `description` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `courses`
@@ -54,7 +56,7 @@ CREATE TABLE `curriculumdetails` (
   `subId` int(11) NOT NULL,
   `yearId` int(11) NOT NULL,
   `semId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `curriculumdetails`
@@ -130,7 +132,7 @@ CREATE TABLE `curriculums` (
   `name` varchar(150) NOT NULL,
   `course_id` int(11) NOT NULL,
   `sy` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `curriculums`
@@ -152,7 +154,7 @@ CREATE TABLE `departments` (
   `id` int(11) NOT NULL,
   `department` varchar(200) NOT NULL,
   `description` varchar(300) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `departments`
@@ -175,7 +177,23 @@ CREATE TABLE `enrollmentdetails` (
   `currDetId` int(11) NOT NULL,
   `addedBy` int(11) NOT NULL,
   `addedAt` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `enrollmentdetails`
+--
+
+INSERT INTO `enrollmentdetails` (`id`, `enrollmentId`, `currDetId`, `addedBy`, `addedAt`) VALUES
+(1, 6, 2, 1, '2023-12-06 09:09:59'),
+(2, 6, 18, 1, '2023-12-06 09:10:07'),
+(3, 6, 19, 1, '2023-12-06 09:10:07'),
+(4, 6, 20, 1, '2023-12-06 09:10:07'),
+(5, 10, 2, 2, '2024-03-12 20:35:58'),
+(6, 10, 9, 2, '2024-03-12 20:36:08'),
+(7, 10, 11, 2, '2024-03-12 20:36:08'),
+(8, 10, 12, 2, '2024-03-12 20:36:08'),
+(9, 10, 13, 2, '2024-03-12 20:36:08'),
+(10, 10, 14, 2, '2024-03-12 20:36:08');
 
 -- --------------------------------------------------------
 
@@ -191,7 +209,19 @@ CREATE TABLE `enrollments` (
   `createdBy` int(11) NOT NULL,
   `createdAt` datetime NOT NULL,
   `status` varchar(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `enrollments`
+--
+
+INSERT INTO `enrollments` (`id`, `studId`, `syId`, `semId`, `createdBy`, `createdAt`, `status`) VALUES
+(6, 3, 4, 1, 1, '2023-12-06 09:09:41', 'Completed'),
+(9, 2, 4, 1, 1, '2023-12-10 17:35:38', 'Pending'),
+(10, 3, 4, 2, 2, '2024-03-12 20:35:49', 'Completed'),
+(11, 4, 4, 1, 1, '2024-03-23 15:51:40', 'Pending'),
+(12, 5, 4, 1, 1, '2024-03-23 16:31:38', 'Completed'),
+(13, 5, 4, 2, 1, '2024-03-23 17:48:08', 'Pending');
 
 -- --------------------------------------------------------
 
@@ -203,7 +233,7 @@ CREATE TABLE `graderange` (
   `id` int(11) NOT NULL,
   `grade` varchar(50) NOT NULL,
   `description` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `graderange`
@@ -238,7 +268,26 @@ CREATE TABLE `grades` (
   `semester` int(11) NOT NULL,
   `schoolyear` int(11) NOT NULL,
   `isConfirmed` int(11) NOT NULL COMMENT '0 not confirmed, 1 Confirmed'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `grades`
+--
+
+INSERT INTO `grades` (`id`, `studId`, `currDetailsId`, `grade`, `semester`, `schoolyear`, `isConfirmed`) VALUES
+(1, 3, 1, 'INC', 1, 3, 1),
+(4, 3, 3, '2.0', 1, 3, 1),
+(5, 3, 4, '3.0', 1, 3, 0),
+(6, 3, 5, '1.75', 1, 3, 0),
+(7, 3, 6, '1.25', 1, 3, 1),
+(8, 3, 7, '1.50', 1, 2, 1),
+(12, 1, 1, '1.00', 1, 4, 0),
+(13, 1, 16, '1.00', 1, 4, 0),
+(14, 1, 8, '1.00', 1, 4, 0),
+(15, 1, 1, '1.00', 1, 4, 0),
+(16, 1, 1, '1.00', 1, 4, 0),
+(17, 1, 1, '1.00', 1, 4, 0),
+(19, 5, 1, '1.00', 1, 4, 0);
 
 -- --------------------------------------------------------
 
@@ -251,7 +300,7 @@ CREATE TABLE `prerequisites` (
   `currDetailsId` int(11) NOT NULL,
   `prereq` int(11) NOT NULL COMMENT 'Curriculum Details Id',
   `type` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `prerequisites`
@@ -278,6 +327,34 @@ INSERT INTO `prerequisites` (`id`, `currDetailsId`, `prereq`, `type`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `proofs`
+--
+
+CREATE TABLE `proofs` (
+  `id` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `yearid` int(11) NOT NULL,
+  `semester` int(11) NOT NULL,
+  `filename` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recoveries`
+--
+
+CREATE TABLE `recoveries` (
+  `id` int(11) NOT NULL,
+  `username` varchar(150) NOT NULL,
+  `token` text NOT NULL,
+  `date_created` date NOT NULL,
+  `isActive` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `schoolyears`
 --
 
@@ -285,7 +362,7 @@ CREATE TABLE `schoolyears` (
   `id` int(11) NOT NULL,
   `schoolyear` varchar(50) NOT NULL,
   `status` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `schoolyears`
@@ -307,7 +384,7 @@ CREATE TABLE `semesters` (
   `id` int(11) NOT NULL,
   `sem` varchar(50) NOT NULL,
   `status` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `semesters`
@@ -334,7 +411,17 @@ CREATE TABLE `students` (
   `courseId` int(11) NOT NULL,
   `currId` int(11) NOT NULL,
   `password` varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `students`
+--
+
+INSERT INTO `students` (`id`, `studNo`, `fname`, `lname`, `mname`, `email`, `courseId`, `currId`, `password`) VALUES
+(2, '23-SC-0123', 'Pedro', 'Calungsod', 'M', 'pedrocalungsod@psu.edu.ph', 1, 1, '$2y$10$qNaipG9W5pggblLxTTUCF.iJK.4NWBnk6b4Z6Dgi6.kPWaO/Q47Wu'),
+(3, '23-SC-0124', 'Juan', 'Dela Cruz', 'D', 'juan@gmail.com', 1, 1, '$2y$10$qNaipG9W5pggblLxTTUCF.iJK.4NWBnk6b4Z6Dgi6.kPWaO/Q47Wu'),
+(4, '23-SC-0125', 'Tony', 'Parker', 'B', 'tony@gmail.com', 1, 1, '$2y$10$.6yPSBLtqX1heYky6cA4seB0.Xog8g0HDUybgBV.BTZh9ypDzrCpC'),
+(5, '23-SC-12345', 'New', 'Test', 'Test', 'test@gmail.com', 1, 1, '$2y$10$fk0IUaeE24mPCP/yyKfTL.tiN12SdrnyejhMpwEkOQJ1w/x5inj9y');
 
 -- --------------------------------------------------------
 
@@ -347,7 +434,7 @@ CREATE TABLE `subjects` (
   `subjectCode` varchar(150) NOT NULL,
   `description` text NOT NULL,
   `units` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `subjects`
@@ -427,14 +514,14 @@ CREATE TABLE `users` (
   `password` varchar(150) NOT NULL,
   `courseId` int(11) NOT NULL,
   `userType` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `empno`, `fname`, `lname`, `mname`, `email`, `password`, `courseId`, `userType`) VALUES
-(1, 'SC-0000', 'Admin', 'Admin', 'Admin', 'admin@gmail.com', '$2y$10$sehniIXMi8GryxPhgLQ/.OouW9fA2ogjYr3jrc1SG8lldj1q8nRXa', 1, 'Admin'),
+(1, 'SC-0000', 'Admin', 'Admin', 'Admin', 'admin@gmail.com', '$2y$10$fk0IUaeE24mPCP/yyKfTL.tiN12SdrnyejhMpwEkOQJ1w/x5inj9y', 1, 'Admin'),
 (2, 'SC-0001', 'Faculty', 'Faculty', 'Faculty', 'faculty@gmail.com', '$2y$10$6nrZRs1aiRbHhSjURK9Au.8wZZV0XZkaahRW/2W0ndgDq7cbWpFFq', 1, 'Instructor'),
 (3, 'SC-0002', 'Second', 'Lastname', 'Middle', 'sc0002@gmail.com', '$2y$10$8DFTb4x/HiQljLqPAoo0iun8.1qoX7bDsC0CzbBk09rnUT.HN96FW', 1, 'Instructor');
 
@@ -447,7 +534,7 @@ INSERT INTO `users` (`id`, `empno`, `fname`, `lname`, `mname`, `email`, `passwor
 CREATE TABLE `usertypes` (
   `id` int(11) NOT NULL,
   `utype` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `usertypes`
@@ -467,7 +554,7 @@ INSERT INTO `usertypes` (`id`, `utype`) VALUES
 CREATE TABLE `yearlevels` (
   `id` int(11) NOT NULL,
   `year` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `yearlevels`
@@ -535,6 +622,18 @@ ALTER TABLE `grades`
 -- Indexes for table `prerequisites`
 --
 ALTER TABLE `prerequisites`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `proofs`
+--
+ALTER TABLE `proofs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `recoveries`
+--
+ALTER TABLE `recoveries`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -613,13 +712,13 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `enrollmentdetails`
 --
 ALTER TABLE `enrollmentdetails`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `enrollments`
 --
 ALTER TABLE `enrollments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `graderange`
@@ -631,13 +730,25 @@ ALTER TABLE `graderange`
 -- AUTO_INCREMENT for table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `prerequisites`
 --
 ALTER TABLE `prerequisites`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `proofs`
+--
+ALTER TABLE `proofs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `recoveries`
+--
+ALTER TABLE `recoveries`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `schoolyears`
@@ -655,7 +766,7 @@ ALTER TABLE `semesters`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `subjects`
