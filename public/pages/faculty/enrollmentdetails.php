@@ -1,20 +1,25 @@
 <?php
 
 use Makkari\Controllers\Grades;
-
+    
 require_once(TEMPLATE_PATH . "/header.php");
 require_once(TEMPLATE_PATH . "/nav.php");
 ?>
-<div class="px-8 ">
-
-    <div class=" flex flex-col gap-4 p-6 bg-white shadow-lg shadow-black/5 rounded-lg">
-        <h2 class="text-xl font-semibold ">Student Information</h2>
+<div class="px-8">
+    <!-- Back Button -->
+    <div class="mb-4">
+        <button onclick="window.location.href='http://localhost:8000/preenroll'" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            Back
+        </button>
+    </div>
+    
+    <div class="flex flex-col gap-4 p-6 bg-white shadow-lg shadow-black/5 rounded-lg">
+        <h2 class="text-xl font-semibold">Student Information</h2>
         <div>
             <h2 class="text-2xl font-bold" id="studno" data-studno="<?= $student->getStudNo() ?>"><?= $student->getStudNo() ?></h2>
             <h2 class="text-xl font-semibold"><?= $student->getFullName() ?></h2>
             <p><?= $student->getCourse()->getDescription() ?></p>
         </div>
-
     </div>
 </div>
 <div class="px-8 gap-4">
@@ -31,7 +36,6 @@ require_once(TEMPLATE_PATH . "/nav.php");
                                 echo "<option value='{$yearlevel->getId()}'>{$yearlevel->getYear()}</option>";
                             }
                             ?>
-
                         </select>
                         <label for="year" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Year Level <span class="text-danger">*</span></label>
                     </div>
@@ -73,7 +77,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
             </div>
             <table class="w-full">
                 <thead>
-                    <tr class="bg-accent/50">
+                    <tr class=".bg-custom-light-blue ">
                         <th class="px-2 py-1 text-left">Code</th>
                         <th class="px-2 py-1 text-left">Description</th>
                         <th class="px-2 py-1 text-left">Unit</th>
@@ -89,7 +93,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
                         $subject = $detail->getCurr()->getSubject();
                         $total += $subject->getUnits();
                     ?>
-                        <tr class="even:bg-slate-50">
+                        <tr class=".bg-custom-light-blue ">
                             <td class="px-2 py-1"><?= $subject->getSubjectCode() ?></td>
                             <td class="px-2 py-1"><?= $subject->getDescription() ?></td>
                             <td class="px-2 py-1"><?= $subject->getUnits() ?></td>
@@ -107,14 +111,13 @@ require_once(TEMPLATE_PATH . "/nav.php");
                     <?php } ?>
                 </tbody>
                 <tfoot>
-                    <tr class="bg-accent/50">
+                    <tr class=".bg-custom-light-blue ">
                         <td colspan="2" class="px-2 py-1 text-right font-semibold">Total Units</td>
                         <td colspan="3" class="px-2 py-1 font-semibold"><?= $total ?></td>
                     </tr>
                 </tfoot>
             </table>
         </div>
-
     </div>
 </div>
 

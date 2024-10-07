@@ -4,31 +4,64 @@ use Makkari\Controllers\Grades;
 
 require_once(TEMPLATE_PATH . "/header.php");
 require_once(TEMPLATE_PATH . "/nav.php");
+
 $sub = $subject->getSubject();
 $grades = $subject->getGradesByStudent($userdata->getId());
+
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+.thick-black-border {
+    border: 1px solid black; /* Thicker border */
+    border-collapse: separate; /* Separate border model to avoid double borders */
+    border-spacing: 0; /* No spacing between cells */
+}
+th, 
+td {
+    border: 1px solid black; /* Thicker border for table headers and cells */
+}
+th {
+    text-align: center; /* Center text in table headers */
+    background-color: #dbeaf2; /* Light blue background for headers */
+    color: #333; /* Darker text color for contrast */
+}
+td {
+    background-color: #f0f7ff; /* Very light blue background for table cells */
+}
+</style>
+
+</head>
+<body>
 <div class="px-8">
     <div class="py-4">
-        <?php
-        if ($_SESSION['user_type'] != 'Student') {
-        ?>
-            <a href="/studentgrades//<?= $userdata->getStudNo() ?>" class="bg-brand hover:bg-brand-dark  rounded-md px-4 py-2 text-stone-50 transition-all text-sm">Back</a>
-        <?php } else {
-        ?>
-            <a href="/MyCurriculums" class="bg-brand hover:bg-brand-dark  rounded-md px-4 py-2 text-stone-50 transition-all text-sm">Back</a>
-        <?php
-        } ?>
+        <?php if ($_SESSION['user_type'] != 'Student') { ?>
+            <a href="/studentgrades//<?= $userdata->getStudNo() ?>" class="bg-brand hover:bg-brand-dark rounded-md px-4 py-2 text-stone-50 transition-all text-sm">Back</a>
+        <?php } else { ?>
+            <a href="/MyCurriculums" class="bg-brand hover:bg-brand-dark rounded-md px-4 py-2 text-stone-50 transition-all text-sm">Back</a>
+        <?php } ?>
     </div>
     <div class="bg-white p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
         <h2 class="font-bold text-3xl mb-2"><?= $userdata->getFullName(); ?></h2>
         <h2 class="text-xl font-bold"><?= $curriculum->getName() ?></h2>
         <p><?= $curriculum->getCourse()->getDescription() ?></p>
-        <p><?= $curriculum->getSyDet()->getSchoolyear() ?></p>
+        <?php
+        $syDet = $curriculum->getSyDet();
+        if ($syDet) {
+            echo '<p>' . htmlspecialchars($syDet->getSchoolyear()) . '</p>';
+        } else {
+            echo '<p>Schoolyear information not available</p>';
+        }
+        ?>
     </div>
     <div class="bg-white p-6 rounded-xl shadow-lg shadow-black/5 border border-slate-700/10 mb-6">
         <div class="text-2xl font-semibold mb-4">
-            <?= $sub->getSubjectCode() . " " . $sub->getDescription() . " " . $sub->getUnits() ?>
+            <?= htmlspecialchars($sub->getSubjectCode() . " " . $sub->getDescription() . " " . $sub->getUnits()) ?>
         </div>
         <table class="w-full border border-slate-700/10 mb-2">
             <thead>
@@ -40,34 +73,23 @@ $grades = $subject->getGradesByStudent($userdata->getId());
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-700/10 " id="tableBody">
-                <?php
-                foreach ($grades as $grade) :
-                    $iscofirmed = $grade->getIsConfirmed();
-                ?>
+                <?php foreach ($grades as $grade) : ?>
                     <tr>
-                        <td class="px-2 py-1"><?= $grade->getGrade() ?></td>
-                        <td class="px-2 py-1"><?= $grade->getSchoolyearInfo()->getSchoolyear() ?></td>
-                        <td class="px-2 py-1"><?= $grade->getSemesterInfo()->getSem() ?></td>
+                        <td class="px-2 py-1"><?= htmlspecialchars($grade->getGrade()) ?></td>
+                        <td class="px-2 py-1"><?= htmlspecialchars($grade->getSchoolyearInfo() ? $grade->getSchoolyearInfo()->getSchoolyear() : 'N/A') ?></td>
+                        <td class="px-2 py-1"><?= htmlspecialchars($grade->getSemesterInfo() ? $grade->getSemesterInfo()->getSem() : 'N/A') ?></td>
                         <td class="px-2 py-1 flex flex-row item-center gap-2">
-                            <?php
-                            if (!$iscofirmed) {
-                            ?>
-                                <a href="#" data-remote="/grades/edit/<?= $grade->getId() . "/" . $userdata->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" title="Edit Grade" class="pop bg-success hover:bg-success-dark transition-all text-slate-200 p-2 rounded-md">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
-                                    </svg>
-                                </a>
-                                <a href="#" data-remote="/grades/confirm/<?= $grade->getId() . "/" . $userdata->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" title="Edit Grade" class="pop bg-danger hover:bg-danger-dark transition-all text-slate-200 p-2 rounded-md">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                    </svg>
-                                </a>
-                            <?php } ?>
+                            <?php if (!$grade->getIsConfirmed()) : ?>
+                               <a href="#" data-remote="/grades/edit/<?= htmlspecialchars($grade->getId()) . "/" . htmlspecialchars($userdata->getId()) ?>" data-size="w-full md:w-2/5 lg:w-1/5" title="Edit Grade" class="pop bg-success hover:bg-success-dark transition-all text-slate-200 p-2 rounded-md">
+    Edit Grade
+</a>
+<a href="#" data-remote="/grades/confirm/<?= htmlspecialchars($grade->getId()) . "/" . htmlspecialchars($userdata->getId()) ?>" data-size="w-full md:w-2/5 lg:w-1/5" title="Delete Grade" class="pop bg-danger hover:bg-danger-dark transition-all text-slate-200 p-2 rounded-md">
+    Delete
+</a>
+                            <?php endif; ?>
                         </td>
                     </tr>
-                <?php
-                endforeach;
-                ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>

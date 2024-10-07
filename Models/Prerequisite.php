@@ -4,6 +4,7 @@ namespace Makkari\Models;
 
 use Makkari\Controllers\Currdetails;
 use Makkari\Models\Model;
+use Makkari\Models\Curriculumdetail;
 
 class Prerequisite extends Model
 {
@@ -12,7 +13,7 @@ class Prerequisite extends Model
     protected $prereq;
     protected $type;
 
-    public function __construct($id, $currDetailsId, $prereq, $type)
+    public function __construct($id = null, $currDetailsId, $prereq, $type)
     {
         $this->id = $id;
         $this->currDetailsId = $currDetailsId;
@@ -59,46 +60,41 @@ class Prerequisite extends Model
     {
         $this->type = $value;
     }
+
     public function getCode()
     {
         $subject = Curriculumdetail::getById($this->prereq);
-        return $subject->getSubject()->getSubjectCode();
+
+        if ($subject && $subject->getSubject()) {
+            return $subject->getSubject()->getSubjectCode();
+        } else {
+            return null; // Return null instead of 'Unknown Code' for better handling
+        }
     }
+
     public static function ifExists($currDetailsId, $prereq)
     {
         $m = Model::getInstance();
         $r = $m->executeQuery(
-            'SELECT * FROM prerequisites WHERE currDetailsId=:currDetId and prereq=:prereq',
-            array(
+            'SELECT * FROM prerequisites WHERE currDetailsId=:currDetId AND prereq=:prereq',
+            [
                 ":currDetId" => $currDetailsId,
                 ":prereq" => $prereq
-            )
+            ]
         );
-        return $r->stmt->rowCount();
+        return $r->stmt->rowCount() > 0;
     }
-    public static function getAllByPrereq($currDetailsId)
+
+    public static function getAllBy($field, $value)
     {
         $m = Model::getInstance();
         $list = [];
-        $r = $m->executeQuery('SELECT * FROM prerequisites WHERE currDetailsId=:currDetId', array(":currDetId" => $currDetailsId));
+        $query = "SELECT * FROM prerequisites WHERE $field=:value";
+        $r = $m->executeQuery($query, [":value" => $value]);
         if ($r->stmt->rowCount()) {
-            $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($r as $v) {
-                $data = new Prerequisite(...$v);
-                $list[] = $data;
-            }
-        }
-        return $list;
-    }
-    public static function getAllByCurr($currDetailsId)
-    {
-        $m = Model::getInstance();
-        $list = [];
-        $r = $m->executeQuery('SELECT * FROM prerequisites WHERE currDetailsId=:currDetId', array(":currDetId" => $currDetailsId));
-        if ($r->stmt->rowCount()) {
-            $r = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
-            foreach ($r as $v) {
-                $data = new Prerequisite(...$v);
+            $rows = $r->stmt->fetchAll(\PDO::FETCH_ASSOC);
+            foreach ($rows as $v) {
+                $data = new Prerequisite($v['id'], $v['currDetailsId'], $v['prereq'], $v['type']);
                 $list[] = $data;
             }
         }
@@ -107,44 +103,54 @@ class Prerequisite extends Model
 
     public static function getAll()
     {
-
         $m = Model::getInstance();
         $list = [];
-        $r = $m->all('prerequisites');
-        if ($r) {
-            foreach ($r as $v) {
-                $data = new Prerequisite(...$v);
+        $rows = $m->all('prerequisites');
+        if ($rows) {
+            foreach ($rows as $v) {
+                $data = new Prerequisite($v['id'], $v['currDetailsId'], $v['prereq'], $v['type']);
                 $list[] = $data;
             }
         }
         return $list;
     }
 
-    public static function getById($value)
+    public static function getById($id)
     {
         $m = Model::getInstance();
-        $data = NULL;
-        $r = $m->getOne('prerequisites', 'id', $value);
+        $r = $m->getOne('prerequisites', 'id', $id);
         if ($r) {
-
-            $data = new Prerequisite(...$r);
+            return new Prerequisite($r['id'], $r['currDetailsId'], $r['prereq'], $r['type']);
         }
-        return $data;
+        return null;
     }
 
     public function save()
     {
         $m = Model::getInstance();
         if ($this->id) {
-            $query = 'UPDATE prerequisites SET currDetailsId=:currDetailsId,prereq=:prereq,type=:type WHERE id=:id';
-            $params = array(':id' => $this->id, ':currDetailsId' => $this->currDetailsId, ':prereq' => $this->prereq, ':type' => $this->type);
+            $query = 'UPDATE prerequisites SET currDetailsId=:currDetailsId, prereq=:prereq, type=:type WHERE id=:id';
+            $params = [
+                ':id' => $this->id,
+                ':currDetailsId' => $this->currDetailsId,
+                ':prereq' => $this->prereq,
+                ':type' => $this->type
+            ];
             $result = $m->executeQuery($query, $params);
             return $result->stmt->rowCount();
         } else {
-            $query = 'INSERT INTO prerequisites VALUES (:id,:currDetailsId,:prereq,:type)';
-            $params = array(':id' => $this->id, ':currDetailsId' => $this->currDetailsId, ':prereq' => $this->prereq, ':type' => $this->type);
+            $query = 'INSERT INTO prerequisites (currDetailsId, prereq, type) VALUES (:currDetailsId, :prereq, :type)';
+            $params = [
+                ':currDetailsId' => $this->currDetailsId,
+                ':prereq' => $this->prereq,
+                ':type' => $this->type
+            ];
             $result = $m->executeQuery($query, $params);
-            return $result->stmt->rowCount();
+            if ($result->stmt->rowCount()) {
+                $this->id = $m->lastInsertId(); // Update the id after insertion
+                return $this->id;
+            }
+            return null;
         }
     }
 
@@ -155,5 +161,6 @@ class Prerequisite extends Model
             $stmt = $m->delete('prerequisites', $this->id);
             return $stmt->stmt->rowCount();
         }
+        return 0;
     }
 }

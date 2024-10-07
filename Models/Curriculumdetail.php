@@ -71,11 +71,13 @@ class Curriculumdetail extends Model
     {
         $this->semId = $value;
     }
+
     public function getGradesByStudent($studid)
     {
         $grades = Grade::getGradeByStudentAndSubject($studid, $this->id);
         return $grades;
     }
+
     public function getByCurrDet()
     {
         $grades = Grade::getGradeByStudentAndSubject($_SESSION['user_id'], $this->id);
@@ -87,6 +89,7 @@ class Curriculumdetail extends Model
         $subject = Subject::getById($this->subId);
         return $subject;
     }
+
     public function getSem()
     {
         $sem = Semester::getById($this->semId);
@@ -95,7 +98,8 @@ class Curriculumdetail extends Model
 
     public function getPreReqs()
     {
-        $prereq = Prerequisite::getAllByPrereq($this->id);
+        // Replacing getAllByPrereq with getAllBy method
+        $prereq = Prerequisite::getAllBy('currDetailsId', $this->id);
         return $prereq;
     }
 
@@ -113,6 +117,7 @@ class Curriculumdetail extends Model
         }
         return $list;
     }
+
     public static function getByCurrIdLevel($id, $lvl)
     {
         $m = Model::getInstance();
@@ -143,7 +148,7 @@ class Curriculumdetail extends Model
                               WHERE ((yearId=:year and semId=:sem) and 
                               (currId=:currid and id not in 
                                     (SELECT currDetailsId FROM prerequisites WHERE prereq not in
-                                        (SELECT currDetailsId FROM grades WHERE (grade <=3 and grade = :inc) and (studId=:studid))
+                                        (SELECT currDetailsId FROM grades WHERE (grade <=3 and grade != :inc) and (studId=:studid))
                                     )
                               )) and id not in (SELECT currDetailsId FROM grades WHERE (grade <=3) and (studId=:studid))
                               ', $params);
@@ -157,9 +162,9 @@ class Curriculumdetail extends Model
         }
         return $list;
     }
+
     public static function getAll()
     {
-
         $m = Model::getInstance();
         $list = [];
         $r = $m->all('curriculumdetails');
@@ -178,7 +183,6 @@ class Curriculumdetail extends Model
         $data = NULL;
         $r = $m->getOne('curriculumdetails', 'id', $value);
         if ($r) {
-
             $data = new Curriculumdetail(...$r);
         }
         return $data;

@@ -169,7 +169,7 @@ class Preenroll extends Controller
                 }
             }
             // var_dump($e);
-            Redirect::to("/preenroll/transaction/{$student->getStudNo()}/{$enrollmentid}");
+            Redirect::to("/preenroll/transaction/{$enrollmentid}/{$student->getStudNo()}");
         }
     }
     public static function confirm($id)
@@ -207,17 +207,17 @@ class Preenroll extends Controller
         }
     }
     public static function remove()
-    {
-        if (self::post() and self::verifyRequest()) {
-            $enrolldet = Enrollmentdetail::getById($_POST['id']);
-            $enroll = Enrollment::getById($enrolldet->getEnrollmentId());
-            $student = Student::getById($enroll->getStudId());
-            if ($enrolldet->remove()) {
-                self::createNotif("Subject has been removed.", 1);
-            } else {
-                self::createNotif("Something went wrong. Please try again.", 0);
-            }
+{
+    if (self::post() and self::verifyRequest()) {
+        $enrolldet = Enrollmentdetail::getById($_POST['id']);
+        $enroll = Enrollment::getById($enrolldet->getEnrollmentId());
+        $student = Student::getById($enroll->getStudId()); // Corrected method name
+        if ($enrolldet->remove()) {
+            self::createNotif("Subject has been removed.", 1);
+        } else {
+            self::createNotif("Something went wrong. Please try again.", 0);
         }
-        Redirect::to("/preenroll/transaction/{$student->getStudNo()}/{$enroll->getId()}");
     }
+    Redirect::to("/preenroll/transaction/{$enroll->getId()}/{$student->getStudNo()}");
+}
 }

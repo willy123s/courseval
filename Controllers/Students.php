@@ -27,6 +27,7 @@ class Students extends Controller
             $view->render("/studentsview", $data);
         }
     }
+    
     public static function create()
     {
         self::checkAuth();
@@ -39,6 +40,7 @@ class Students extends Controller
             $view->render("/addStudent", $data);
         }
     }
+
     public static function edit($id)
     {
         self::checkAuth();
@@ -52,18 +54,18 @@ class Students extends Controller
             $view->render("editStudent", $data);
         }
     }
+
     public static function save()
     {
         self::checkAuth();
-        if (self::post() and self::verifyRequest()) {
-            // $password = self::generatePassword(6);
+        if (self::post() && self::verifyRequest()) {
             $password = "psu12345";
             $data = array(
-                "id" => NULL,
+                "id" => null,
                 "studNo" => $_POST['stnumber'],
                 "fname" => $_POST['fname'],
                 "lname" => $_POST['lname'],
-                "mname" => $_POST['mname'],
+                "mname" => isset($_POST['mname']) ? $_POST['mname'] : null,
                 "email" => $_POST['email'],
                 "courseId" => $_POST['course'],
                 "currId" => $_POST['curr'],
@@ -74,7 +76,6 @@ class Students extends Controller
                 "studNo" => ['required'],
                 "fname" => ['required'],
                 "lname" => ['required'],
-                "mname" => ['required'],
                 "email" => ['required'],
                 "courseId" => ['required'],
                 "currId" => ['required'],
@@ -90,21 +91,22 @@ class Students extends Controller
                     self::createNotif("Something went wrong. Please try again", 1);
                 }
             } else {
-                self::createNotif($validate->showErrors, 0);
+                self::createNotif($validate->showErrors(), 0);
             }
         }
         Redirect::to("/students");
     }
+
     public static function update()
     {
         self::checkAuth();
-        if (self::post() and self::verifyRequest()) {
+        if (self::post() && self::verifyRequest()) {
             $data = array(
                 "id" => $_POST['id'],
                 "studNo" => $_POST['stnumber'],
                 "fname" => $_POST['fname'],
                 "lname" => $_POST['lname'],
-                "mname" => $_POST['mname'],
+                "mname" => isset($_POST['mname']) ? $_POST['mname'] : null,
                 "email" => $_POST['email'],
                 "courseId" => $_POST['course'],
                 "currId" => $_POST['curr'],
@@ -114,7 +116,6 @@ class Students extends Controller
                 "studNo" => ['required'],
                 "fname" => ['required'],
                 "lname" => ['required'],
-                "mname" => ['required'],
                 "email" => ['required'],
                 "courseId" => ['required'],
                 "currId" => ['required'],
@@ -137,11 +138,12 @@ class Students extends Controller
                     self::createNotif("Something went wrong. Please try again", 1);
                 }
             } else {
-                self::createNotif($validate->showErrors, 0);
+                self::createNotif($validate->showErrors(), 0);
             }
         }
         Redirect::to("/students");
     }
+
     public static function confirm($id)
     {
         self::checkAuth();
@@ -155,10 +157,11 @@ class Students extends Controller
             $view->render("confirm", $data);
         }
     }
+
     public static function remove()
     {
         self::checkAuth();
-        if (self::post() and self::verifyRequest()) {
+        if (self::post() && self::verifyRequest()) {
             $student = Student::getById($_POST['id']);
             if ($student->remove()) {
                 self::createNotif("Student has been removed", 1);

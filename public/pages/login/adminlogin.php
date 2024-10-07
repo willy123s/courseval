@@ -6,28 +6,121 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="/css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('/public/img/PSUSC.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-container img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        .login-container h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .login-container p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .login-container form .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .login-container form .input-group input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: transparent;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .login-container form .input-group .fa {
+            margin: 0 10px;
+            color: #888;
+        }
+
+        .login-container form button {
+            width: 100%;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .login-container form button:hover {
+            background-color: #0056b3;
+        }
+
+        .login-container form a {
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #007bff;
+            font-size: 14px;
+        }
+
+        .login-container form a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body class="relative flex flex-col items-center justify-center h-screen">
-    <div class="relative text-danger-light w-24">
-        <img src="/public/img/psulogo.png" alt="">
-    </div>
-    <div class="p-6 w-full max-w-[370px] ">
-        <h2 class="text-center font-black text-2xl mb-3">Course Checking System</h2>
+    <div class="login-container">
+        <img src="/public/img/psulogo.png" alt="PSU Logo">
+        <h2 class="text-center font-black text-lg mb-3">Course Evaluation System</h2>
         <p class="text-center mb-4">
             <span class="text-slate-800 font-bold">Faculty Login</span>
         </p>
         <form action="/auth/a" method="post">
             <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?? "" ?>">
-            <div class="relative mb-6">
-                <input type="text" name="username" id="username" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent" placeholder="name" />
-                <label for="username" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Username <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <i class="fa fa-user"></i>
+                <input type="text" name="username" id="username" placeholder="Username" required>
             </div>
-            <div class="relative mb-6">
-                <input type="password" name="password" id="password" class="px-4 py-3 peer w-full border focus:outline-none focus:ring-2 focus:border-brand focus:ring-brand/20 rounded-md border-slate-700/10 placeholder:text-transparent" placeholder="name" />
-                <label for="password" class="absolute left-0 ml-2 px-1 -translate-y-3 bg-white text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:ml-2 peer-focus:-translate-y-3 peer-focus:px-1 peer-focus:text-sm">Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" id="password" placeholder="Password" required>
             </div>
-            <button class="w-full bg-brand hover:bg-brand-dark  rounded-md px-4 py-3 text-stone-50 transition-all">Log In</button>
+            <button class="w-full bg-brand hover:bg-brand-dark rounded-md px-4 py-3 text-stone-50 transition-all">Log In</button>
             <div class="py-4 text-center">
                 <a href="/recover" class="text-slate-500 text-sm">Forgot password?</a>
             </div>

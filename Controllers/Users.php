@@ -52,8 +52,8 @@ class Users extends Controller
     public static function save()
     {
         if (self::post() and self::verifyRequest()) {
-            $password = self::generatePassword(6);
-            $data = array(
+            $password = "psu12345";
+                        $data = array(
                 "id" => $_POST['id'] ?? NULL,
                 "empno" => $_POST['empno'],
                 "fname" => $_POST['fname'],

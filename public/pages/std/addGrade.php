@@ -6,7 +6,7 @@
         </svg>
     </button>
 </div>
-
+    
 <div class="">
     <form action="/grades/save" method="post">
         <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">

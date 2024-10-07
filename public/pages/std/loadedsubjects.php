@@ -1,12 +1,11 @@
 <div>
-    <table class="w-full">
+    <table class="w-full border border-slate-700/10">
         <thead>
-            <tr class="bg-accent/30">
-                <th class="px-2 py-1 text-left">Check</th>
-                <th class="px-2 py-1 text-left">Code</th>
-                <th class="px-2 py-1 text-left">Description</th>
-                <th class="px-2 py-1 text-left">Unit</th>
-                <th class="px-2 py-1 text-left">Pre-Req</th>
+            <tr class="bg-light-blue-dark text-left">
+                <th class="px-2 py-1">Code</th>
+                <th class="px-2 py-1">Description</th>
+                <th class="px-2 py-1">Unit</th>
+                <th class="px-2 py-1">Pre-Req</th>
             </tr>
         </thead>
         <tbody id="checkboxList">
@@ -20,14 +19,11 @@
                     $prereqs[] = $pp->getCode();
                 }
             ?>
-                <tr class="even:bg-slate-50">
-                    <td class="px-2 py-1">
-                        <input type="checkbox" name="" id="" value="<?= $load->getId() ?>">
-                    </td>
+                <tr class="even:bg-light-blue">
                     <td class="px-2 py-1"><?= $subject->getSubjectCode() ?></td>
                     <td class="px-2 py-1"><?= $subject->getDescription() ?></td>
                     <td class="px-2 py-1"><?= $subject->getUnits() ?></td>
-                    <td class="px-2 py-1"> <?= implode(", ", $prereqs); ?></td>
+                    <td class="px-2 py-1"><?= implode(", ", $prereqs); ?></td>
                 </tr>
             <?php
             }
@@ -35,9 +31,7 @@
         </tbody>
     </table>
     <?php if ($_SESSION['user_type'] != "Student") : ?>
-        <button onclick="getCheckedCheckboxes()" class="px-3 py-2 text-sm bg-brand hover:bg-brand-dark text-white mt-6 rounded-lg">Add to Enrollment</button>
+        <button onclick="getCheckedCheckboxes()" class="px-3 py-2 text-sm bg-light-blue hover:bg-light-blue-dark text-white mt-6 rounded-lg">Add to Enrollment</button>
     <?php endif; ?>
-    <div>
-
-    </div>
+    <div></div>
 </div>
