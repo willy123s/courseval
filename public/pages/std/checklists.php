@@ -18,8 +18,7 @@ require_once(TEMPLATE_PATH . "/nav.php");
             border-spacing: 0;
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid black;
             padding: 8px;
         }
@@ -99,19 +98,18 @@ require_once(TEMPLATE_PATH . "/nav.php");
                 <h2 class="font-bold text-lg mb-2"><?= $ssem->getSem() ?></h2>
                 <table class="w-full border border-slate-700/10 mb-4">
                     <thead>
-                        <tr class="bg-accent/20 text-left ">
+                        <tr class="bg-accent/20 text-left">
                             <th class="px-2 py-3 w-32">Code #</th>
                             <th class="px-2 py-3 w-96">Description</th>
                             <th class="px-2 py-3">Units</th>
                             <th class="px-2 py-3">Semester</th>
                             <th class="px-2 py-3">Pre requisite</th>
                             <th class="px-2 py-3">Grade</th>
-                            <th class="px-2 py-3">Action</th>
+                            <!-- <th class="px-2 py-3">Action</th> -->
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-700/10 " id="tableBody">
+                    <tbody class="divide-y divide-slate-700/10" id="tableBody">
                         <?php
-
                         if (sizeof($s) == 0) :
                             echo "<tr>";
                             echo "<td colspan='4' class='px-2 py-3 text-red'>No Record(s) Found</td>";
@@ -138,16 +136,21 @@ require_once(TEMPLATE_PATH . "/nav.php");
                             if ($subject->getSem()->getId() == $ssem->getId()) {
                         ?>
                                 <tr class="transition-all <?= empty($grades) ? 'no-grades' : '' ?>">
-                                    <td class="px-2 py-3"><?= $subject->getSubject()->getSubjectCode() ?></td>
-                                    <td class="px-2 py-3"><?= $subject->getSubject()->getDescription() ?></td>
-                                    <td class="px-2 py-3"><?= $subject->getSubject()->getUnits() ?></td>
+                                    <td class="px-2 py-3">
+                                        <?= $subject->getSubject() ? $subject->getSubject()->getSubjectCode() : 'N/A' ?>
+                                    </td>
+                                    <td class="px-2 py-3">
+                                        <?= $subject->getSubject() ? $subject->getSubject()->getDescription() : 'N/A' ?>
+                                    </td>
+                                    <td class="px-2 py-3">
+                                        <?= $subject->getSubject() ? $subject->getSubject()->getUnits() : 'N/A' ?>
+                                    </td>
                                     <td class="px-2 py-3"><?= $subject->getSem()->getSem() ?></td>
                                     <td class="px-2 py-3">
                                         <?= implode(", ", $prereqs); ?>
                                     </td>
                                     <td class="px-2 py-3"><?= implode(" / ", $grades) ?></td>
-                                    <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                        <!-- Button na View Grades -->
+                                    <!-- <td class="px-2 py-3 flex flex-row item-center gap-2">
                                         <a href="/grades/viewgrades/<?= $subject->getId() ?>" title="View Grades" class="bg-success hover:bg-success-dark transition-all text-slate-200 p-1 rounded-md">
                                             View Grades
                                         </a>
@@ -158,12 +161,11 @@ require_once(TEMPLATE_PATH . "/nav.php");
                                         }
                                         if ($iscofirmed != 1 or $g) {
                                         ?>
-                                            <!-- Button na Add Grades -->
                                             <a href="#" title="Add Grades" data-remote="/grades/create/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-1 rounded-md">
                                                 Add Grades
                                             </a>
                                         <?php } ?>
-                                    </td>
+                                    </td> -->
                                 </tr>
                         <?php
                             }
@@ -180,4 +182,4 @@ require_once(TEMPLATE_PATH . "/nav.php");
 
 <?php
 require_once(TEMPLATE_PATH . "/footer.php");
-?>
+?> 

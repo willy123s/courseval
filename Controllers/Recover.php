@@ -136,7 +136,7 @@ class Recover extends Controller
             );
             $view->render("/verify", $m);
 
-            // Redirect::to("/recover");
+             Redirect::to("/recover");
         }
     }
 }

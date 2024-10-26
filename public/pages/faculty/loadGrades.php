@@ -89,6 +89,10 @@
             align-items: center;
             text-decoration: none;
         }
+        .bg-light-red {
+    background-color: rgba(255, 99, 71, 0.5); /* Light red color with 50% opacity */
+}
+
 
         .fixed-button:hover {
             background-color: #1e40af;
@@ -152,53 +156,61 @@ if ($yearlevels) {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-700/10" id="tableBody">
-                            <?php
-                            if (empty($s)) {
-                                echo "<tr>";
-                                echo "<td colspan='6' class='px-2 py-3 text-red'>No Record(s) Found</td>";
-                                echo "</tr>";
-                            } else {
-                                foreach ($s as $subject) {
-                                    $grade = $subject->getGradesByStudent($user ? $user->getId() : null);
-                                    $grades = [];
-                                    $isConfirmed = 2;
-                                    if (!empty($grade)) {
-                                        foreach ($grade as $g) {
-                                            $grades[] = $g->getGrade();
-                                            $isConfirmed = $g->getIsConfirmed();
-                                        }
-                                    } else {
-                                        $isConfirmed = 2;
-                                    }
+    <?php
+    if (empty($s)) {
+        echo "<tr>";
+        echo "<td colspan='6' class='px-2 py-3 text-red'>No Record(s) Found</td>";
+        echo "</tr>";
+    } else {
+        foreach ($s as $subject) {
+            $grade = $subject->getGradesByStudent($user ? $user->getId() : null);
+            $grades = [];
+            $isConfirmed = 2;
+            if (!empty($grade)) {
+                foreach ($grade as $g) {
+                    $grades[] = $g->getGrade();
+                    $isConfirmed = $g->getIsConfirmed();
+                }
+            } else {
+                $isConfirmed = 2;
+            }
 
-                                    $prereq = $subject->getPreReqs();
-                                    $prereqs = [];
-                                    foreach ($prereq as $pp) {
-                                        $prereqs[] = $pp->getCode();
-                                    }
+            $prereq = $subject->getPreReqs();
+            $prereqs = [];
+            foreach ($prereq as $pp) {
+                $prereqs[] = $pp->getCode();
+            }
 
-                                    $sem = $subject->getSem() ? $subject->getSem()->getSem() : 'Unknown Semester';
-                                    $rowClass = empty($grades) ? 'highlight-yellow' : ''; // Apply class if no grades
+            $sem = $subject->getSem() ? $subject->getSem()->getSem() : 'Unknown Semester';
 
-                                    if ($subject->getSem() && $subject->getSem()->getId() == $ssem->getId()) {
-                            ?>
-                                        <tr class="transition-all <?= $rowClass ?>">
-                                            <td class="px-2 py-3"><?= $subject->getSubject() ? $subject->getSubject()->getSubjectCode() : 'Unknown Code' ?></td>
-                                            <td class="px-2 py-3"><?= $subject->getSubject() ? $subject->getSubject()->getDescription() : 'No Description' ?></td>
-                                            <td class="px-2 py-3"><?= $subject->getSubject() ? $subject->getSubject()->getUnits() : 'No Units' ?></td>
-                                            <td class="px-2 py-3"><?= implode(", ", $prereqs); ?></td>
-                                            <td class="px-2 py-3"><?= implode(" / ", $grades) ?></td>
-                                            <td class="px-2 py-3 flex flex-row item-center gap-2">
-                                                <a href="/studentgrades/viewgrades/<?= $user ? $user->getId() : '' ?>/<?= $subject->getId() ?>" title="View Grade(s)" class="bg-success hover:bg-success-dark transition-all text-slate-200 p-1 rounded-md">
-                                                    View 
-                                                </a>
-                                                <a href="#" title="Add Grade" data-remote="/grades/create/<?= $subject->getId() . "/" . ($user ? $user->getId() : '') ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-1 rounded-md">
-                                                    Add Grade
-                                                </a>
-                                                <?php if ($isConfirmed == 0) { ?>
-                                                    <a href="#" title="Finalize Grade" data-remote="/grades/accept/<?= $user ? $user->getId() : '' ?>/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-success-light hover:bg-success transition-all text-slate-200 p-1 rounded-md">
-                                                        Finalize 
-                                                    </a>
+            // Bagong kondisyon para sa kulay pula kapag ang grade ay INC, 5, WITHDRAWN, o DROP
+            $redBackgroundGrades = ['INC', '5.00', 'W', 'Drop'];
+            $rowClass = '';
+            if (empty($grades)) {
+                $rowClass = 'highlight-yellow'; // Kulay dilaw kung walang grades
+            } elseif (array_intersect($grades, $redBackgroundGrades)) {
+                $rowClass = 'bg-red-500 !important';
+            }
+
+            if ($subject->getSem() && $subject->getSem()->getId() == $ssem->getId()) {
+    ?>
+                <tr class="transition-all <?= $rowClass ?>">
+                    <td class="px-2 py-3"><?= $subject->getSubject() ? $subject->getSubject()->getSubjectCode() : 'Unknown Code' ?></td>
+                    <td class="px-2 py-3"><?= $subject->getSubject() ? $subject->getSubject()->getDescription() : 'No Description' ?></td>
+                    <td class="px-2 py-3"><?= $subject->getSubject() ? $subject->getSubject()->getUnits() : 'No Units' ?></td>
+                    <td class="px-2 py-3"><?= implode(", ", $prereqs); ?></td>
+                    <td class="px-2 py-3"><?= implode(" / ", $grades) ?></td>
+                    <td class="px-2 py-3 flex flex-row item-center gap-2">
+                        <a href="/studentgrades/viewgrades/<?= $user ? $user->getId() : '' ?>/<?= $subject->getId() ?>" title="View Grade(s)" class="bg-success hover:bg-success-dark transition-all text-slate-200 p-1 rounded-md">
+                            View 
+                        </a>
+                        <a href="#" title="Add Grade" data-remote="/grades/create/<?= $subject->getId() . "/" . ($user ? $user->getId() : '') ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-brand-dark hover:bg-brand-light transition-all text-slate-200 p-1 rounded-md">
+                            Add Grade
+                        </a>
+                        <?php if ($isConfirmed == 0) { ?>
+                            <!-- <a href="#" title="Finalize Grade" data-remote="/grades/accept/<?= $user ? $user->getId() : '' ?>/<?= $subject->getId() ?>" data-size="w-full md:w-2/5 lg:w-1/5" class="pop bg-success-light hover:bg-success transition-all text-slate-200 p-1 rounded-md">
+                                Finalize 
+                            </a> -->
                                                 <?php } ?>
                                             </td>
                                         </tr>

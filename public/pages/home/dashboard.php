@@ -244,11 +244,7 @@ h1 {
           <h2><i class="fas fa-tasks"></i> Course Checking </h2>
         </div>
       </a>
-      <a href="/proofs" class="text-card">
-        <div class="card-content">
-          <h2><i class="fas fa-file-alt"></i> Proof of Grades</h2>
-        </div>
-      </a>
+     
       <a href="/settings" class="text-card">
         <div class="card-content">
           <h2><i class="fas fa-cog"></i> Account Settings</h2>
